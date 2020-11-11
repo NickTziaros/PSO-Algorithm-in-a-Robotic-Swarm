@@ -15,18 +15,18 @@ while not rospy.is_shutdown():
 	#Define Attraction State
 	class Attract(smach.State):
 		def __init__(self):
-			smach.State.__init__(self, outcomes=['finished','failed'])
-			self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
+                    smach.State.__init__(self, outcomes=['finished','failed'])
+		    self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
 
 		def callback(self,msg):
-                        msg=self.msg
+                        
 			self.robot_pose_x=msg.pose.pose.position.x
 			self.robot_pose_y=msg.pose.pose.position.y
-			rospy.loginfo('fuck you')
+			rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
 
 		def execute(self, userdata):
-			rospy.loginfo('Change to Repulse')
-			return 'finished'
+		        rospy.loginfo('Changing to..')
+                        return 'finished'
 
 	class Repulse(smach.State):
 		def __init__(self):
