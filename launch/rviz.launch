@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find swarm)/urdf/robot_description.urdf.xacro'"/>
+
+  <arg name="robot_name" default="robot"/>
+
+  
+
+
+
+<group ns="$(arg robot_name)">
+
+
+  <!-- load controllers -->
+  <rosparam file="$(find swarm)/config/controllers.yaml" command="load"/>
+
+  <!-- send fake joint values -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+  </node>
+   
+
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        respawn="false" output="screen" 
+        args="joint_state_controller"/> <!--  ns="$(arg robot_name) -->
+
+  
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+    <remap from="/joint_states" to="$(arg robot_name)/joint_states" />
+  </node> 
+   
+</group>
+
+	<node name="spawn" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -unpause -urdf -model $(arg robot_name)"/>
+
+  	<!-- Show in Rviz   -->
+ 	<node name="rviz" pkg="rviz" type="rviz"  args="-d $(find swarm)/launch/rviz_pref.rviz" />
+
+
+
+</launch>
