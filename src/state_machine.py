@@ -19,6 +19,7 @@ while not rospy.is_shutdown():
 			self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
 
 		def callback(self,msg):
+                        msg=self.msg
 			self.robot_pose_x=msg.pose.pose.position.x
 			self.robot_pose_y=msg.pose.pose.position.y
 			rospy.loginfo('fuck you')
