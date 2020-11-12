@@ -7,17 +7,18 @@ from 	nav_msgs.msg import Odometry
 import	smach
 import  smach_ros
 import	time
+from 	robot_Class import robot
 
 
 while not rospy.is_shutdown():	
 	args=rospy.myargv(argv=sys.argv)
 	robotname= args[1]
-	speed=Twist()
+	# speed=Twist()
 	
-	def go():
-		speed.linear.x=0.1
-	def stop():
-		speed.linear.x=0
+	# def go():
+	# 	speed.linear.x=0.1
+	# def stop():
+	# 	speed.linear.x=0
 
 # States of state machine
 #----------------------------------------------------------------------------------------------------------
@@ -25,9 +26,10 @@ while not rospy.is_shutdown():
 	#Define Attraction State
 	class Attract(smach.State):
 		def __init__(self):
-                    smach.State.__init__(self, outcomes=['finished','failed'])
-		    self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
-		    
+			smach.State.__init__(self, outcomes=['finished','failed'])
+			self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
+			global r
+			r=robot(robotname)	
 
 		def callback(self,msg):
                         
@@ -38,8 +40,8 @@ while not rospy.is_shutdown():
 		def execute(self, userdata):
 			# Publishes speed and waits 2 secs
 			rospy.loginfo('Changing to..')
-			go()
-			pub.publish(speed)
+			r.go()
+			# pub.publish(speed)
 			time.sleep(2)
 			return 'finished'
 
@@ -50,8 +52,8 @@ while not rospy.is_shutdown():
 		def execute(self, userdata):
 			# Publishes speed and waits 2 secs
 			rospy.loginfo('Change to Attract')
-			stop()
-			pub.publish(speed)
+			r.stop()
+			# pub.publish(speed)
 			time.sleep(2)
 			return 'finished'
 
@@ -70,7 +72,7 @@ while not rospy.is_shutdown():
 	# Initialize node
 	rospy.init_node('State_machine_node')
 	sm =smach.StateMachine(outcomes=['I_have_finished'])
-	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=1)
+	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
 
 
 
