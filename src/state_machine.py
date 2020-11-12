@@ -6,43 +6,61 @@ from 	geometry_msgs.msg import Twist,Point
 from 	nav_msgs.msg import Odometry
 import	smach
 import  smach_ros
+import	time
 
 
 while not rospy.is_shutdown():	
 	args=rospy.myargv(argv=sys.argv)
 	robotname= args[1]
-		
+	speed=Twist()
+	
+	def go():
+		speed.linear.x=0.1
+	def stop():
+		speed.linear.x=0
+
+# States of state machine
+#----------------------------------------------------------------------------------------------------------
+
 	#Define Attraction State
 	class Attract(smach.State):
 		def __init__(self):
                     smach.State.__init__(self, outcomes=['finished','failed'])
 		    self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
+		    
 
 		def callback(self,msg):
                         
 			self.robot_pose_x=msg.pose.pose.position.x
 			self.robot_pose_y=msg.pose.pose.position.y
-			rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
+			# rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
 
 		def execute(self, userdata):
-		        rospy.loginfo('Changing to..')
-                        return 'finished'
+			# Publishes speed and waits 2 secs
+			rospy.loginfo('Changing to..')
+			go()
+			pub.publish(speed)
+			time.sleep(2)
+			return 'finished'
 
 	class Repulse(smach.State):
 		def __init__(self):
 			smach.State.__init__(self, outcomes=['finished', 'failed'])
 
 		def execute(self, userdata):
+			# Publishes speed and waits 2 secs
 			rospy.loginfo('Change to Attract')
+			stop()
+			pub.publish(speed)
+			time.sleep(2)
 			return 'finished'
 
 
+# Initializations of SM && publishers
+# -------------------------------------------------------------------------------------------------------------
 
-		
 
 
-		
-# def main():
 
  
 		
@@ -51,14 +69,9 @@ while not rospy.is_shutdown():
 	
 	# Initialize node
 	rospy.init_node('State_machine_node')
-	# robot=rospy.Subscriber("/robot_1/odom", Odometry ,callback)
-	# robot1=rospy.Subscriber("/{}/odom".format(robotname),Odometry, callback1)
-	# Create the actual State Machine
-	# outcome4 is the final
 	sm =smach.StateMachine(outcomes=['I_have_finished'])
-	#Passing arguments in States 
-	# sm.user_data.Attraction_Force=......
-	# sm.user_data.Repulsion_Force=.......
+	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=1)
+
 
 
 
@@ -83,8 +96,6 @@ rospy.spin()
 
 
 
-# if __name__ == '__main__':
-# 	main()
 
 
 
