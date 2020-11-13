@@ -10,9 +10,9 @@ import	time
 from 	robot_Class import robot
 
 
-while not rospy.is_shutdown():	
-	args=rospy.myargv(argv=sys.argv)
-	robotname= args[1]
+# while not rospy.is_shutdown():	
+args=rospy.myargv(argv=sys.argv)
+robotname= args[1]
 	# speed=Twist()
 	
 	# def go():
@@ -24,38 +24,38 @@ while not rospy.is_shutdown():
 #----------------------------------------------------------------------------------------------------------
 
 	#Define Attraction State
-	class Attract(smach.State):
-		def __init__(self):
-			smach.State.__init__(self, outcomes=['finished','failed'])
-			self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
-			global r
-			r=robot(robotname)	
+class Attract(smach.State):
+	def __init__(self):
+		smach.State.__init__(self, outcomes=['finished','failed'])
+		self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
+		global r
+		r=robot(robotname)	
 
-		def callback(self,msg):
+	def callback(self,msg):
                         
-			self.robot_pose_x=msg.pose.pose.position.x
-			self.robot_pose_y=msg.pose.pose.position.y
-			# rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
+		self.robot_pose_x=msg.pose.pose.position.x
+		self.robot_pose_y=msg.pose.pose.position.y
+		# rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
 
-		def execute(self, userdata):
-			# Publishes speed and waits 2 secs
-			rospy.loginfo('Changing to..')
-			r.go()
-			# pub.publish(speed)
-			time.sleep(2)
-			return 'finished'
+	def execute(self, userdata):
+		# Publishes speed and waits 2 secs
+		rospy.loginfo('Changing to..')
+		r.go()
+		# pub.publish(speed)
+		time.sleep(2)
+		return 'finished'
 
-	class Repulse(smach.State):
-		def __init__(self):
-			smach.State.__init__(self, outcomes=['finished', 'failed'])
+class Repulse(smach.State):
+	def __init__(self):
+		smach.State.__init__(self, outcomes=['finished', 'failed'])
 
-		def execute(self, userdata):
-			# Publishes speed and waits 2 secs
-			rospy.loginfo('Change to Attract')
-			r.stop()
-			# pub.publish(speed)
-			time.sleep(2)
-			return 'finished'
+	def execute(self, userdata):
+		# Publishes speed and waits 2 secs
+		rospy.loginfo('Change to Attract')
+		r.turn_left()
+		# pub.publish(speed)
+		time.sleep(2)
+		return 'finished'
 
 
 # Initializations of SM && publishers
@@ -65,17 +65,20 @@ while not rospy.is_shutdown():
 
 
  
-		
+if __name__ == '__main__':		
 
 
-	
-	# Initialize node
+# Initialize node
 	rospy.init_node('State_machine_node')
 	sm =smach.StateMachine(outcomes=['I_have_finished'])
 	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
 
 
+	
+# Create and start the introspection server for visualising state machine
 
+	sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
+	sis.start()
 
 
 
@@ -93,7 +96,8 @@ while not rospy.is_shutdown():
 
 	# Start State_Machine
 	outcome =sm.execute()
-rospy.spin()
+	sis.stop()
+	rospy.spin()
 
 
 
