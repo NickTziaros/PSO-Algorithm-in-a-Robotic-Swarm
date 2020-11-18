@@ -60,16 +60,16 @@
         </friction>
       </surface>
     </collision>
-    <!-- <visual name="$(arg robot_name)/caster_front_visual">
+    <visual name="$(arg robot_name)/caster_front_visual">
       <origin rpy=" 0 0 0" xyz="0.2 0 -0.05"/>
       <geometry>
         <sphere radius="0.05"/>
       </geometry>
-    </visual> -->
+    </visual>
   </link>
 
     
-  <link name="$(arg robot_name)/sensor_ir">
+  <link name="$(arg robot_name)/sensor_laser">
     <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <mass value="1" />
@@ -80,23 +80,23 @@
     <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-        <cylinder radius="0.05" length="0.1"/>
+        <cylinder radius="0.05" length="0.15"/>
         </geometry>
         <material name="white" />
     </visual>
         
-       <!-- <collision>
+       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-        <cylinder radius="0.05" length="0.1"/>
+        <cylinder radius="0.05" length="0.15"/>
         </geometry>
-    </collision> --> 
+    </collision> 
   </link> 
   
-  <joint name="$(arg robot_name)/joint_sensor_ir" type="fixed">
-    <origin xyz="0.15 0 0.05" rpy="0 0 0"/>
+  <joint name="$(arg robot_name)/joint_sensor_laser" type="fixed">
+    <origin xyz="0.15 0 0.13" rpy="0 0 0"/>
     <parent link="$(arg robot_name)/link_chassis"/>
-    <child link="$(arg robot_name)/sensor_ir"/>
+    <child link="$(arg robot_name)/sensor_laser"/>
   </joint> 
 
   <xacro:link_wheel name="$(arg robot_name)/link_right_wheel" /> 

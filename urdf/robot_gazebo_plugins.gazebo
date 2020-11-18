@@ -46,7 +46,7 @@
     </gazebo>
 
 
-    <gazebo reference="sensor_ir">
+    <gazebo reference="$(arg robot_name)/sensor_laser">
     <sensor type="ray" name="head_hokuyo_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
@@ -56,8 +56,8 @@
           <horizontal>
             <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
+            <min_angle>-3.1415</min_angle>
+            <max_angle>3.1415</max_angle>
           </horizontal>
         </scan>
         <range>
@@ -72,23 +72,23 @@
         </noise>
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/$(arg robot_name)/laser/scan</topicName>
-        <frameName>$(arg robot_name)/sensor_ir</frameName>
+        <topicName>laser_scan</topicName>
+        <frameName>sensor_laser</frameName>
       </plugin>
     </sensor>
   </gazebo>
 
-    <!--  <gazebo reference="link_chassis">        
+<!--      <gazebo reference="link_chassis">        
       <sensor type="ray" name="sensor">
           <pose>0 0 0 0 0 0</pose>
           <update_rate>50</update_rate>
           <ray>
             <scan>
                 <horizontal>
-                  <samples>1</samples>
+                  <samples>720</samples>
                   <resolution>1.0</resolution>
-                  <min_angle>-10</min_angle>
-                  <max_angle>360</max_angle>
+                  <min_angle>-1,570796</min_angle>
+                  <max_angle>1,570796</max_angle>
                 </horizontal>
                 <vertical>
                   <samples>1</samples>
@@ -100,7 +100,7 @@
             <range>
                 <min>0.01</min>
                 <max>10</max>
-                <resolution>0.02</resolution>
+                <resolution>0.01</resolution>
             </range>
           </ray>
           <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
