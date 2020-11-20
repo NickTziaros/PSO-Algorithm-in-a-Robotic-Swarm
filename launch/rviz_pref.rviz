@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /RobotModel1
+        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -123,7 +124,7 @@ Visualization Manager:
       Position Transformer: XYZ
       Queue Size: 100
       Selectable: true
-      Size (Pixels): 5
+      Size (Pixels): 10
       Size (m): 10
       Style: Points
       Topic: /robot_2/laser_scan
@@ -174,10 +175,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.470203697681427
+      Pitch: 0.2702036499977112
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.9522409439086914
+      Yaw: 3.997253894805908
     Saved: ~
 Window Geometry:
   Displays:
@@ -195,5 +196,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1267
-  X: 2251
-  Y: 124
+  X: 2230
+  Y: 108

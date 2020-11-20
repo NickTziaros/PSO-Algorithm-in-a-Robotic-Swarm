@@ -10,15 +10,9 @@ import	time
 from 	robot_Class import robot
 
 
-# while not rospy.is_shutdown():	
+	
 args=rospy.myargv(argv=sys.argv)
 robotname= args[1]
-	# speed=Twist()
-	
-	# def go():
-	# 	speed.linear.x=0.1
-	# def stop():
-	# 	speed.linear.x=0
 
 # States of state machine
 #----------------------------------------------------------------------------------------------------------
@@ -27,44 +21,36 @@ robotname= args[1]
 class Attract(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished','failed'])
-		self.subscriber = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
+		# na kanw to r meros ths classhs
 		global r
 		r=robot(robotname)	
 
-	def callback(self,msg):
-                        
-		self.robot_pose_x=msg.pose.pose.position.x
-		self.robot_pose_y=msg.pose.pose.position.y
-		# rospy.loginfo("Odom {} {}".format(self.robot_pose_x,self.robot_pose_y))
+
 
 	def execute(self, userdata):
-		# Publishes speed and waits 2 secs
-		rospy.loginfo('Changing to..')
-		r.go()
-		# pub.publish(speed)
-		time.sleep(2)
-		return 'finished'
+		foo=r.go2goal(10,10)
+		if(foo==True):
+			return 'finished'
 
 class Repulse(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished', 'failed'])
 
+ 
+
 	def execute(self, userdata):
-		# Publishes speed and waits 2 secs
-		rospy.loginfo('Change to Attract')
-		r.turn_left()
-		# pub.publish(speed)
-		time.sleep(2)
+		r.stop()
 		return 'finished'
+		
+
+
+
+
+
 
 
 # Initializations of SM && publishers
 # -------------------------------------------------------------------------------------------------------------
-
-
-
-
- 
 if __name__ == '__main__':		
 
 
