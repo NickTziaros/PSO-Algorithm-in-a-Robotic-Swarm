@@ -4,7 +4,7 @@ from    geometry_msgs.msg import Twist,Point
 from    nav_msgs.msg import Odometry
 import  math
 from    tf.transformations import euler_from_quaternion
-
+from    Laser_Class import Laser_ClosestPoint
 
 
 
@@ -15,10 +15,11 @@ class robot():
         
         global speed 
         global pub
+        global l
         speed=Twist()
         self.subs = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
         self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
-        
+        l=Laser_ClosestPoint(robotname)
     def go2goal(self,x_goal,y_goal):
         
         while not rospy.is_shutdown() :
@@ -26,38 +27,39 @@ class robot():
             # auto exei rate 10Hz
             rate=rospy.Rate(10)
             rate.sleep()
+            closest_point=l.closest_point()
+            rospy.loginfo('closest_point is: %s ', closest_point)
             K_linear=0.1
             distance=abs(math.sqrt(((x_goal-self.robot_pose_x) ** 2) + ((y_goal-self.robot_pose_y) ** 2)))
             speed.linear.x=K_linear*distance
-            rospy.loginfo('robot_name is: %s ', distance)
             K_angular=1.5
             desired_angle_goal=math.atan2(y_goal- self.robot_pose_y,x_goal- self.robot_pose_x)
             rospy.loginfo('robot_name is: %s ', desired_angle_goal-self.yaw)
-            if desired_angle_goal- self.yaw!=0 :
+            # if desired_angle_goal- self.yaw!=0 :
                     
-                speed.angular.z=-(desired_angle_goal- self.yaw)*K_angular
+            #     speed.angular.z=-(desired_angle_goal- self.yaw)*K_angular
                     
-            else:
-                speed.angular.z=(desired_angle_goal- self.yaw)*K_angular
-            self.pub.publish(speed)
+            # else:
+            #     speed.angular.z=(desired_angle_goal- self.yaw)*K_angular
+            # self.pub.publish(speed)
 # --------------------------------------------------------------------------------------------------------------
             # My go2goal
-            # if distance>1 :
-            #     rospy.loginfo('robot_name is: %s ', distance)
-            #     if abs(desired_angle_goal- self.yaw)>=0.2 :
-            #         if desired_angle_goal- self.yaw!=0 :
+            if  distance>1 :
+                rospy.loginfo('robot_name is: %s ', distance)
+                if abs(desired_angle_goal- self.yaw)>=0.2 :
+                    if desired_angle_goal- self.yaw!=0 :
                     
-            #             self.turn_left()
+                        self.turn_left()
                     
-            #         else:
-            #             self.turn_right()
-            #     else:          
+                    else:
+                        self.turn_right()
+                else:          
             
-            #         self.go()
-            # else:
-            #     return True
-            if distance<0.2:
-                break
+                    self.go()
+            else:
+                return True
+            # if distance<0.2:
+            #     break
                             
         return True    
 

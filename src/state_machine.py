@@ -23,12 +23,15 @@ class Attract(smach.State):
 		smach.State.__init__(self, outcomes=['finished','failed'])
 		# na kanw to r meros ths classhs
 		global r
-		r=robot(robotname)	
+		global l
+		r=robot(robotname)
+		
 
 
 
 	def execute(self, userdata):
 		foo=r.go2goal(10,10)
+		
 		if(foo==True):
 			return 'finished'
 
