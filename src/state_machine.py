@@ -30,6 +30,9 @@ class Attract(smach.State):
 
 
 	def execute(self, userdata):
+		laser_point=r.closest_point()
+		rospy.loginfo('closest_point is: %s ', laser_point)
+
 		foo=r.go2goal(10,10)
 		
 		if(foo==True):
