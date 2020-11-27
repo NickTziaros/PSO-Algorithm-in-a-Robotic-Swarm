@@ -32,11 +32,22 @@ class Attract(smach.State):
 	def execute(self, userdata):
 		laser_point=r.closest_point()
 		rospy.loginfo('closest_point is: %s ', laser_point)
-
-		foo=r.go2goal(10,10)
+		foo=r.go2goal()
 		
 		if(foo==True):
 			return 'finished'
+
+class Wait(smach.State):
+	def __init__(self):
+		smach.State.__init__(self, outcomes=['finished', 'failed'])
+
+ 
+
+	def execute(self, userdata):
+		r.stop()
+		rospy.sleep(1)
+		return 'finished'
+		
 
 class Repulse(smach.State):
 	def __init__(self):
@@ -45,11 +56,7 @@ class Repulse(smach.State):
  
 
 	def execute(self, userdata):
-		r.stop()
-		return 'finished'
-		
-
-
+		pass
 
 
 
@@ -78,9 +85,11 @@ if __name__ == '__main__':
 	# Adding states
 	with sm:
 		smach.StateMachine.add('Attract', Attract(),
-                                transitions={'finished': 'Repulse', 'failed': 'Attract'})
+                                transitions={'finished': 'Wait', 'failed': 'Attract'})
 		smach.StateMachine.add('Repulse', Repulse(),
                                 transitions={'finished': 'Attract', 'failed': 'Repulse'})
+		smach.StateMachine.add('Wait', Wait(),
+                                transitions={'finished': 'Attract', 'failed': 'Wait'})
 		# smach.StateMachine.add('Attract',CBState(Attract_state_callback),{'finished':'Repulse', 'failed':'Attract'})
 		# smach.StateMachine.add('Repulse',CBState(Repulse_state_callback),{'finished':'Attract', 'failed':'Repulse'})
 

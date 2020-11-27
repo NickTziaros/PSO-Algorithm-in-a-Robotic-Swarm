@@ -29,4 +29,5 @@ class Laser_ClosestPoint():
 				x=laser[i]*cos(angle)
 				point.x=x
 				point.y=shortest_laser*sin(angle)
-		return	shortest_laser
+		# returns the point closer to the robot
+		return	point

@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /RobotModel1
         - /LaserScan1
       Splitter Ratio: 0.5
@@ -62,28 +63,28 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        robot_2/link_chassis:
+        robot_1/link_chassis:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_2/link_left_wheel:
+        robot_1/link_left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_2/link_right_wheel:
+        robot_1/link_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_2/sensor_laser:
+        robot_1/sensor_laser:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
       Name: RobotModel
-      Robot Description: robot_2/robot_description
+      Robot Description: robot_1/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -127,7 +128,7 @@ Visualization Manager:
       Size (Pixels): 10
       Size (m): 10
       Style: Points
-      Topic: /robot_2/laser_scan
+      Topic: /robot_1/laser_scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -136,7 +137,7 @@ Visualization Manager:
   Global Options:
     Background Color: 0; 0; 0
     Default Light: true
-    Fixed Frame: robot_2/odom
+    Fixed Frame: robot_1/odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -160,7 +161,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.9935240745544434
+      Distance: 8.54775619506836
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -175,10 +176,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.2702036499977112
+      Pitch: 0.845203161239624
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.997253894805908
+      Yaw: 4.1322550773620605
     Saved: ~
 Window Geometry:
   Displays:
