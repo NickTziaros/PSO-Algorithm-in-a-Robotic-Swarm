@@ -25,8 +25,8 @@ class robot():
         while not rospy.is_shutdown() :
             # goal_point= the point closer to the robot that the Class Laser_class returns
             goal_point=self.closest_point()
-            x_goal=goal_point.x
-            y_goal=goal_point.y
+            x_goal=goal_point.point.x
+            y_goal=goal_point.point.y
             rospy.loginfo('X: %s Y: %s',x_goal,y_goal )
             K_linear=0.1
             distance=abs(math.sqrt(((x_goal-self.robot_pose_x) ** 2) + ((y_goal-self.robot_pose_y) ** 2)))
@@ -36,8 +36,7 @@ class robot():
             # rospy.loginfo('robot_name is: %s ', desired_angle_goal-self.yaw)
             # Den prolavainei na mpei sto callback kai varaei error!! gia 
             # auto exei rate 10Hz
-            rate=rospy.Rate(10)
-            rate.sleep()
+            
 
 
 
@@ -58,7 +57,8 @@ class robot():
                     self.go()
             else:
                 return True
-            
+        rate=rospy.Rate(5)
+        rate.sleep()
 
 # -------------------------------------------------------------------------
 
