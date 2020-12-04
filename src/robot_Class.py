@@ -2,7 +2,7 @@
 import  rospy
 from    geometry_msgs.msg import Twist,Point
 from    nav_msgs.msg import Odometry
-import  math
+from    math    import sqrt,pow,atan2
 from    tf.transformations import euler_from_quaternion
 from    Laser_Class import Laser_ClosestPoint
 
@@ -11,7 +11,7 @@ from    Laser_Class import Laser_ClosestPoint
 class robot():
     """docstring for ClassName"""
     def __init__(self,robotname):
-        
+
         self.robotname=robotname
         global speed 
         global pub
@@ -19,50 +19,8 @@ class robot():
         speed=Twist()
         self.subs = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
         self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
-
-    def go2goal(self):
-        
-        while not rospy.is_shutdown() :
-            # goal_point= the point closer to the robot that the Class Laser_class returns
-            goal_point=self.closest_point()
-            x_goal=goal_point.point.x
-            y_goal=goal_point.point.y
-            rospy.loginfo('X: %s Y: %s',x_goal,y_goal )
-            K_linear=0.1
-            distance=abs(math.sqrt(((x_goal-self.robot_pose_x) ** 2) + ((y_goal-self.robot_pose_y) ** 2)))
-            speed.linear.x=K_linear*distance
-            K_angular=1.5
-            desired_angle_goal=math.atan2(y_goal- self.robot_pose_y,x_goal- self.robot_pose_x)
-            # rospy.loginfo('robot_name is: %s ', desired_angle_goal-self.yaw)
-            # Den prolavainei na mpei sto callback kai varaei error!! gia 
-            # auto exei rate 10Hz
-            
-
-
-
-
-# -------------------------------------------------------------------------
-            # My go2goal
-            if  distance>0.5 :
-                # rospy.loginfo('robot_name is: %s ', distance)
-                if abs(desired_angle_goal- self.yaw)>=0.2 :
-                    if desired_angle_goal- self.yaw!=0 :
-                    
-                        self.turn_left()
-                    
-                    else:
-                        self.turn_right()
-                else:          
-            
-                    self.go()
-            else:
-                return True
-        rate=rospy.Rate(5)
-        rate.sleep()
-
-# -------------------------------------------------------------------------
-
-
+        self.rate = rospy.Rate(10)
+        self.rate.sleep()
     def callback(self,msg):
 
         # getting the pose values of the robot by subscribing to the /odom topic              
@@ -78,25 +36,63 @@ class robot():
         closest_point=l.closest_point()
         return closest_point
 
-    def go(self):
-        speed.linear.x=0.2
-        speed.angular.z=0.0
-        self.pub.publish(speed)
-
-    def turn_left(self):
-        speed.linear.x=0.05
-        speed.angular.z=-0.8
-        self.pub.publish(speed)
-    def turn_right(self):
-        speed.linear.x=0.05
-        speed.angular.z=0.8
-        self.pub.publish(speed)
-    def stop(self):
-        speed.linear.x=0.0
-        speed.angular.z=0.0
-        self.pub.publish(speed)
+    
     def avoid_obstacle(self):
     
         speed.linear.x=0.1
         speed.angular.z=-0.1
         self.pub.publish(speed)
+    def stop(self):
+        speed.linear.x = 0
+        speed.angular.z = 0
+        
+    def euclidean_distance(self, goal_point):
+        distance= sqrt(pow((goal_point.x - self.robot_pose_x), 2) +
+                    pow((goal_point.y - self.robot_pose_y), 2))
+        return distance
+
+    def linear_vel(self,goal_point, constant=0.1):
+        return constant * self.euclidean_distance(goal_point)
+
+    def angle (self,goal_point):
+        desired_angle_goal=atan2(self.goal_point.y- self.robot_pose_y,self.goal_point.x- self.robot_pose_x)
+        return desired_angle_goal
+
+    def angular_vel(self, goal_point, constant=1):
+        angle_diff=self.angle(goal_point) - self.yaw
+        if abs(angle_diff)>0.2:
+            if angle_diff!=0:
+                speed.angular.z=angular_vel=-constant * (angle_diff)
+            else:
+                speed.angular.z=angular_vel=constant * (angle_diff)
+            rospy.loginfo('angular_vel %s',angular_vel)  
+            angle_diff=self.angle(goal_point) - self.yaw 
+            self.pub.publish(speed)
+        # return angular_vel
+    
+    def go2goal(self):
+        
+        while not rospy.is_shutdown() :
+            # goal_point= the point closer to the robot that the Class Laser_class returns
+            self.goal_point=self.closest_point()
+            
+
+
+# -------------------------------------------------------------------------
+            # My go2goal
+            while  self.euclidean_distance(self.goal_point)>=0.1:
+                self.angular_vel(self.goal_point)
+                speed.linear.x = self.linear_vel(self.goal_point)
+                rospy.loginfo('X: %s Y: %s',self.goal_point.x,self.goal_point.y )
+                rospy.loginfo('distance: %s',self.euclidean_distance(self.goal_point))
+            # Publishing our vel_msg
+                self.pub.publish(speed)
+                self.goal_point=self.closest_point()
+
+            return True  
+            rospy.spin()
+
+
+# -------------------------------------------------------------------------
+
+

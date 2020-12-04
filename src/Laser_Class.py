@@ -17,7 +17,7 @@ class Laser_ClosestPoint():
 		self.robotname=robotname	
 		self.subs = rospy.Subscriber("/{}/laser_scan".format(robotname),LaserScan,self.Laser_callback)
 		self.closest_point_pub = rospy.Publisher("/{}/closest_point".format(robotname),PointStamped, queue_size=10)
-		self.tf_buffer=tf2_ros.Buffer(rospy.Duration(1200))
+		self.tf_buffer=tf2_ros.Buffer(rospy.Duration(3000.0))
 		self.tf_listener=tf2_ros.TransformListener(self.tf_buffer)
 		self.get_tranform() 
 
@@ -61,5 +61,8 @@ class Laser_ClosestPoint():
 		point_transformed.point= pose_transformed.pose.position
 		self.closest_point_pub.publish(point_transformed)
 
+		
+
+
 		# returns the point closer to the robot
-		return	point_transformed
+		return	point
