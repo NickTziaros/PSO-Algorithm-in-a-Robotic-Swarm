@@ -2,7 +2,7 @@
 import  rospy
 from    geometry_msgs.msg import Twist,Point
 from    nav_msgs.msg import Odometry
-from    math    import sqrt,pow,atan2
+from    math    import sqrt,pow,atan2,pi
 from    tf.transformations import euler_from_quaternion
 from    Laser_Class import Laser_ClosestPoint
 
@@ -11,7 +11,9 @@ from    Laser_Class import Laser_ClosestPoint
 class robot():
     """docstring for ClassName"""
     def __init__(self,robotname):
-
+        # self.test=Point()
+        # self.test.x=-1
+        # self.test.y=1
         self.robotname=robotname
         global speed 
         global pub
@@ -39,7 +41,7 @@ class robot():
     
     def avoid_obstacle(self):
     
-        speed.linear.x=0.1
+        speed.linear.x=-0.1
         speed.angular.z=-0.1
         self.pub.publish(speed)
     def stop(self):
@@ -51,7 +53,7 @@ class robot():
                     pow((goal_point.y - self.robot_pose_y), 2))
         return distance
 
-    def linear_vel(self,goal_point, constant=0.1):
+    def linear_vel(self,goal_point, constant=0.05):
         return constant * self.euclidean_distance(goal_point)
 
     def angle (self,goal_point):
@@ -60,12 +62,12 @@ class robot():
 
     def angular_vel(self, goal_point, constant=1):
         angle_diff=self.angle(goal_point) - self.yaw
-        if abs(angle_diff)>0.2:
-            if angle_diff!=0:
+        if abs(angle_diff)>0.05:
+            if angle_diff!=2*pi:
                 speed.angular.z=angular_vel=-constant * (angle_diff)
             else:
                 speed.angular.z=angular_vel=constant * (angle_diff)
-            rospy.loginfo('angular_vel %s',angular_vel)  
+            rospy.loginfo('angular_vel %s, %s',angular_vel,angle_diff)  
             angle_diff=self.angle(goal_point) - self.yaw 
             self.pub.publish(speed)
         # return angular_vel
@@ -75,7 +77,7 @@ class robot():
         while not rospy.is_shutdown() :
             # goal_point= the point closer to the robot that the Class Laser_class returns
             self.goal_point=self.closest_point()
-            
+            # self.goal_point=self.test
 
 
 # -------------------------------------------------------------------------
