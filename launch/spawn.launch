@@ -14,9 +14,10 @@
            
        <!--  <node pkg="swarm" name="get_position" type="get_position.py" output="screen" args="$(arg robot_name) ">
         </node>  -->
-        <!-- <node pkg="swarm" name="state_machine" type="state_machine.py" output="screen" args="$(arg robot_name) ">
+       <!--  <node pkg="swarm" name="state_machine" type="state_machine.py" output="screen" args="$(arg robot_name) ">
+        </node> --> 
+         <node pkg="swarm" name="Laser2pc" type="laser2pc.py" output="screen" args="$(arg robot_name) ">
         </node> 
-     -->
 
         <rosparam file="$(find swarm)/config/controllers.yaml" command="load"/>
 

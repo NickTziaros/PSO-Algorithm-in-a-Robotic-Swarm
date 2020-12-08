@@ -12,12 +12,12 @@ class Laser_ClosestPoint():
 	
 	def __init__(self,robotname):
 
-		rate=rospy.Rate(10)
+		rate=rospy.Rate(5)
 		rate.sleep()
 		self.robotname=robotname	
 		self.subs = rospy.Subscriber("/{}/laser_scan".format(robotname),LaserScan,self.Laser_callback)
 		self.closest_point_pub = rospy.Publisher("/{}/closest_point".format(robotname),PointStamped, queue_size=10)
-		self.tf_buffer=tf2_ros.Buffer(rospy.Duration(3000.0))
+		self.tf_buffer=tf2_ros.Buffer(rospy.Duration(1500.0))
 		self.tf_listener=tf2_ros.TransformListener(self.tf_buffer)
 		self.get_tranform() 
 
@@ -37,7 +37,7 @@ class Laser_ClosestPoint():
 		self.get_tranform()
 
 	def closest_point(self):
-		rate=rospy.Rate(10)
+		rate=rospy.Rate(5)
 		rate.sleep()
 
 		laser=self.laser.ranges

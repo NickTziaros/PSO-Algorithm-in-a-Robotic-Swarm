@@ -43,7 +43,7 @@ class Wait(smach.State):
 
 	def execute(self, userdata):
 		r.stop()
-		rospy.sleep(1)
+		rospy.sleep(3)
 		return 'finished'
 		
 

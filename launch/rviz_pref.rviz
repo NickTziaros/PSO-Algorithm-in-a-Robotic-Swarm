@@ -5,9 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /RobotModel1
-        - /LaserScan1
-        - /PointStamped1
+        - /PointCloud21
+        - /PointCloud21/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -64,28 +63,28 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        robot_1/link_chassis:
+        robot_9/link_chassis:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_1/link_left_wheel:
+        robot_9/link_left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_1/link_right_wheel:
+        robot_9/link_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot_1/sensor_laser:
+        robot_9/sensor_laser:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
       Name: RobotModel
-      Robot Description: robot_1/robot_description
+      Robot Description: robot_9/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -116,7 +115,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 0
@@ -133,7 +132,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/PointStamped
       Color: 0; 255; 0
@@ -143,6 +142,36 @@ Visualization Manager:
       Radius: 0.20000000298023224
       Topic: /robot_9/closest_point
       Unreliable: false
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 0.23000262677669525
+        Min Value: 0.22999943792819977
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 0
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.05000000074505806
+      Style: Flat Squares
+      Topic: /robot_9/LaserPointCloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -172,7 +201,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.792978763580322
+      Distance: 5.256877899169922
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -187,10 +216,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9602032899856567
+      Pitch: 0.6352035403251648
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.609091758728027
+      Yaw: 3.899089813232422
     Saved: ~
 Window Geometry:
   Displays:
@@ -209,4 +238,4 @@ Window Geometry:
     collapsed: false
   Width: 1267
   X: 2230
-  Y: 108
+  Y: 78

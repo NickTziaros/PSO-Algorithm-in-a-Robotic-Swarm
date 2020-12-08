@@ -5,7 +5,7 @@ from    nav_msgs.msg import Odometry
 from    math    import sqrt,pow,atan2,pi
 from    tf.transformations import euler_from_quaternion
 from    Laser_Class import Laser_ClosestPoint
-
+from    GetGoalPoint import GetGoalPoint
 
 
 class robot():
@@ -19,6 +19,7 @@ class robot():
         global pub
         global l
         speed=Twist()
+        self.pc=GetGoalPoint(self.robotname)
         self.subs = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
         self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
         self.rate = rospy.Rate(10)
@@ -35,26 +36,29 @@ class robot():
     def closest_point(self):
         # call the Laser Class and geting the closest point
         l=Laser_ClosestPoint(self.robotname)
-        closest_point=l.closest_point()
+        point_returned=l.closest_point()
+        
+        closest_point=Point()
+        closest_point.x=point_returned.x+self.robot_pose_x
+        closest_point.y=point_returned.y+self.robot_pose_y
         return closest_point
+        # return point_returned
+    
 
-    
-    def avoid_obstacle(self):
-    
-        speed.linear.x=-0.1
-        speed.angular.z=-0.1
-        self.pub.publish(speed)
     def stop(self):
         speed.linear.x = 0
         speed.angular.z = 0
         
     def euclidean_distance(self, goal_point):
-        distance= sqrt(pow((goal_point.x - self.robot_pose_x), 2) +
-                    pow((goal_point.y - self.robot_pose_y), 2))
+        distance= sqrt(pow((self.goal_point.x - self.robot_pose_x), 2) +
+                    pow((self.goal_point.y - self.robot_pose_y), 2))
         return distance
 
     def linear_vel(self,goal_point, constant=0.05):
-        return constant * self.euclidean_distance(goal_point)
+        if self.euclidean_distance>4:
+            return 0.25
+        else:
+            return constant * self.euclidean_distance(goal_point)
 
     def angle (self,goal_point):
         desired_angle_goal=atan2(self.goal_point.y- self.robot_pose_y,self.goal_point.x- self.robot_pose_x)
@@ -82,10 +86,12 @@ class robot():
 
 # -------------------------------------------------------------------------
             # My go2goal
-            while  self.euclidean_distance(self.goal_point)>=0.1:
+            while  self.euclidean_distance(self.goal_point)>=0.5:
+                self.pc.PrintArray()
                 self.angular_vel(self.goal_point)
                 speed.linear.x = self.linear_vel(self.goal_point)
                 rospy.loginfo('X: %s Y: %s',self.goal_point.x,self.goal_point.y )
+                rospy.loginfo('X: %s Y: %s',self.robot_pose_x,self.robot_pose_y )
                 rospy.loginfo('distance: %s',self.euclidean_distance(self.goal_point))
             # Publishing our vel_msg
                 self.pub.publish(speed)
@@ -97,4 +103,8 @@ class robot():
 
 # -------------------------------------------------------------------------
 
-
+    def avoid_obstacle(self):
+    
+        speed.linear.x=-0.1
+        speed.angular.z=-0.1
+        self.pub.publish(speed)
