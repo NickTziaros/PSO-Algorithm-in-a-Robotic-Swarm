@@ -3,6 +3,7 @@ import  rospy
 from  math import cos,sin
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Point,PointStamped,PoseStamped
+import tf
 import tf2_ros
 import tf2_geometry_msgs
 
@@ -12,57 +13,66 @@ class Laser_ClosestPoint():
 	
 	def __init__(self,robotname):
 
-		rate=rospy.Rate(5)
-		rate.sleep()
+		# rate=rospy.Rate(10)
+		# rate.sleep()
 		self.robotname=robotname	
 		self.subs = rospy.Subscriber("/{}/laser_scan".format(robotname),LaserScan,self.Laser_callback)
 		self.closest_point_pub = rospy.Publisher("/{}/closest_point".format(robotname),PointStamped, queue_size=10)
-		self.tf_buffer=tf2_ros.Buffer(rospy.Duration(1500.0))
-		self.tf_listener=tf2_ros.TransformListener(self.tf_buffer)
-		self.get_tranform() 
+		# subscribres to TF and listens at the transforms tha are published
+		self.listener=tf.TransformListener()
+		# we wait for the tranformations between sensor_laser and odom
+		self.listener.waitForTransform("/{}/sensor_laser".format(self.robotname), "/{}/odom".format(self.robotname), rospy.Time(0),rospy.Duration(5.0))
 
 
 
-	def get_tranform(self):
-		try:
-			self.transform = self.tf_buffer.lookup_transform("{}/link_chassis".format(self.robotname),"{}/sensor_laser".format(self.robotname),rospy.Time(0),rospy.Duration(1.0))
-		except (tf2_ros.LookupException, tf2_ros.ConnectivityException,tf2_ros.ExtrapolationException):
-			rospy.logerror("Error getting Transform")
-			print "ERROR"
+
+	
 
 
 
 	def Laser_callback(self,msg):
 		self.laser=msg
-		self.get_tranform()
+		
 
 	def closest_point(self):
-		rate=rospy.Rate(5)
-		rate.sleep()
-
+		
+		
+		# we get the closest reading from the laser scan
 		laser=self.laser.ranges
 		shortest_laser=100000
-		point=Point()
+		laser_point=Point()
 		for i in range(len(laser)):
 			if laser[i]<shortest_laser:
 				shortest_laser=laser[i]
 				angle=self.laser.angle_min + i*self.laser.angle_increment
 				x=laser[i]*cos(angle)
-				point.x=x
-				point.y=shortest_laser*sin(angle)
+				laser_point.x=x
+				laser_point.y=shortest_laser*sin(angle)
 		pose=PoseStamped()
 		pose.header=self.laser.header
-		pose.pose.position = point
+		pose.pose.position = laser_point
 
-		pose_transformed= tf2_geometry_msgs.do_transform_pose(pose, self.transform)
+
+		
 
 		point_transformed=PointStamped()
-		point_transformed.header=pose_transformed.header
-		point_transformed.point= pose_transformed.pose.position
-		self.closest_point_pub.publish(point_transformed)
+		point_transformed.header.frame_id="{}/sensor_laser".format(self.robotname)
+		point_transformed.header.stamp= rospy.Time(0) 
+		# we include the proint we found
+		point_transformed.point=laser_point
+
+		try:
+			# we transform the point to odom frame
+			p=self.listener.transformPoint("/{}/odom".format(self.robotname),point_transformed )
+		except (tf.LookupException, tf.ConnectivityException,tf.ExtrapolationException):
+			print "ERROR"
+
+
+		# we publish the transformed point
+		self.closest_point_pub.publish(p)
 
 		
 
 
 		# returns the point closer to the robot
-		return	point
+		return	p
