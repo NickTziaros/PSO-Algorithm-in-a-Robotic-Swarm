@@ -8,6 +8,7 @@ import	smach
 import  smach_ros
 import	time
 from 	robot_Class import robot
+from    Laser_Class import Laser_ClosestPoint
 
 
 	
@@ -17,24 +18,36 @@ robotname= args[1]
 # States of state machine
 #----------------------------------------------------------------------------------------------------------
 
-	#Define Attraction State
-class Attract(smach.State):
+#Define Approach State
+class Approach(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished','failed'])
 		# na kanw to r meros ths classhs
 		global r
 		global l
+		global speed
 		r=robot(robotname)
-		
-
+		speed=Twist()
+		# Initializes the Laser_ClosestPoint class
+		l=Laser_ClosestPoint(robotname)
+		self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
 
 
 	def execute(self, userdata):
-		foo=r.go2goal()
-		
-		if(foo==True):
-			return 'finished'
 
+		goal_point=l.closest_point()
+ 		while  r.euclidean_distance(goal_point)>=1:
+			r.angular_vel(goal_point)
+			speed.linear.x = r.linear_vel(goal_point)
+			pub.publish(speed)
+			goal_point=l.closest_point()
+		# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
+			
+		return 'finished'
+
+
+
+#Define Wait State
 class Wait(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished', 'failed'])
@@ -46,15 +59,15 @@ class Wait(smach.State):
 		rospy.sleep(3)
 		return 'finished'
 		
-
-class Repulse(smach.State):
+#Define Repel State
+class Repel(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished', 'failed'])
 
  
 
 	def execute(self, userdata):
-		pass
+		return 'finished'
 
 
 
@@ -74,7 +87,7 @@ if __name__ == '__main__':
 	
 # Create and start the introspection server for visualising state machine
 
-	sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
+	sis = smach_ros.IntrospectionServer('server_name', sm, '/{}/SM_ROOT'.format(robotname))
 	sis.start()
 
 
@@ -82,12 +95,12 @@ if __name__ == '__main__':
 
 	# Adding states
 	with sm:
-		smach.StateMachine.add('Attract', Attract(),
-                                transitions={'finished': 'Wait', 'failed': 'Attract'})
-		smach.StateMachine.add('Repulse', Repulse(),
-                                transitions={'finished': 'Attract', 'failed': 'Repulse'})
+		smach.StateMachine.add('Approach', Approach(),
+                                transitions={'finished': 'Wait', 'failed': 'Approach'})
+		smach.StateMachine.add('Repel', Repel(),
+                                transitions={'finished': 'Approach', 'failed': 'Repel'})
 		smach.StateMachine.add('Wait', Wait(),
-                                transitions={'finished': 'Attract', 'failed': 'Wait'})
+                                transitions={'finished': 'Repel', 'failed': 'Wait'})
 		# smach.StateMachine.add('Attract',CBState(Attract_state_callback),{'finished':'Repulse', 'failed':'Attract'})
 		# smach.StateMachine.add('Repulse',CBState(Repulse_state_callback),{'finished':'Attract', 'failed':'Repulse'})
 

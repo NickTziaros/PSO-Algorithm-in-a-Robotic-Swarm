@@ -17,10 +17,8 @@ class robot():
         self.robotname=robotname
         global speed 
         global pub
-        global l
-        l=Laser_ClosestPoint(self.robotname)
+
         speed=Twist()
-        # self.pc=GetGoalPoint(self.robotname)
         self.subs = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
         self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
         self.rate = rospy.Rate(10)
@@ -50,11 +48,12 @@ class robot():
     def stop(self):
         speed.linear.x = 0
         speed.angular.z = 0
+        self.pub.publish(speed)
 # -------------------------------------------------------------------------  
         
     def euclidean_distance(self, goal_point):
-        distance= sqrt(pow((self.goal_point.x - self.robot_pose_x), 2) +
-                    pow((self.goal_point.y - self.robot_pose_y), 2))
+        distance= sqrt(pow((goal_point.x - self.robot_pose_x), 2) +
+                    pow((goal_point.y - self.robot_pose_y), 2))
 
         return distance
 
@@ -70,7 +69,7 @@ class robot():
 # -------------------------------------------------------------------------  
 
     def angle (self,goal_point):
-        desired_angle_goal=atan2(self.goal_point.y- self.robot_pose_y,self.goal_point.x- self.robot_pose_x)
+        desired_angle_goal=atan2(goal_point.y- self.robot_pose_y,goal_point.x- self.robot_pose_x)
         return desired_angle_goal
 
 # -------------------------------------------------------------------------  
@@ -90,29 +89,29 @@ class robot():
 
 
 # -------------------------------------------------------------------------    
-    def go2goal(self):
+    # def go2goal(self):
         
-        while not rospy.is_shutdown() :
-            # goal_point= the point closer to the robot that the Class Laser_class returns
-            self.goal_point=self.closest_point()
-            # self.goal_point=self.test
+    #     while not rospy.is_shutdown() :
+    #         # goal_point= the point closer to the robot that the Class Laser_class returns
+    #         self.goal_point=self.closest_point()
+    #         # self.goal_point=self.test
 
 
 
 
-            while  self.euclidean_distance(self.goal_point)>=0.5:
-                # self.pc.PrintArray()
-                self.angular_vel(self.goal_point)
-                speed.linear.x = self.linear_vel(self.goal_point)
-                rospy.loginfo('X: %s Y: %s',self.goal_point.x,self.goal_point.y )
-                # rospy.loginfo('X: %s Y: %s',self.robot_pose_x,self.robot_pose_y )
-                rospy.loginfo('distance: %s',self.euclidean_distance(self.goal_point))
-            # Publishing our vel_msg
-                self.pub.publish(speed)
-                self.goal_point=self.closest_point()
+    #         while  self.euclidean_distance(self.goal_point)>=1:
+    #             # self.pc.PrintArray()
+    #             self.angular_vel(self.goal_point)
+    #             speed.linear.x = self.linear_vel(self.goal_point)
+    #             rospy.loginfo('X: %s Y: %s',self.goal_point.x,self.goal_point.y )
+    #             # rospy.loginfo('X: %s Y: %s',self.robot_pose_x,self.robot_pose_y )
+    #             rospy.loginfo('distance: %s',self.euclidean_distance(self.goal_point))
+    #         # Publishing our vel_msg
+    #             self.pub.publish(speed)
+    #             self.goal_point=self.closest_point()
 
-            return True  
-            # rospy.spin()
+    #         return True  
+    #         # rospy.spin()
 
 
 # -------------------------------------------------------------------------
