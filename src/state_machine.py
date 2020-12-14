@@ -37,12 +37,13 @@ class Approach(smach.State):
 
 		goal_point=l.closest_point()
  		while  r.euclidean_distance(goal_point)>=1:
-			r.angular_vel(goal_point)
+ 			rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
+ 			speed.angular.z=r.angular_vel(goal_point)
 			speed.linear.x = r.linear_vel(goal_point)
 			pub.publish(speed)
+			rospy.loginfo('X: %s' ,r.euclidean_distance(goal_point) )
 			goal_point=l.closest_point()
-		# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
-			
+		rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )	
 		return 'finished'
 
 

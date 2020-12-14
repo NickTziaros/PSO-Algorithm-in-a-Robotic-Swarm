@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import  rospy
-from    geometry_msgs.msg import Twist,Point
+from    geometry_msgs.msg import Twist,Point,Pose
 from    nav_msgs.msg import Odometry
 from    math    import sqrt,pow,atan2,pi
 from    tf.transformations import euler_from_quaternion
 from    Laser_Class import Laser_ClosestPoint
 from    GetGoalPoint import GetGoalPoint
-
+from    random import *
 
 class robot():
     """docstring for ClassName"""
@@ -24,6 +24,7 @@ class robot():
         self.rate = rospy.Rate(10)
         self.rate.sleep()
     # callback from the subscriber
+
     def callback(self,msg):
 
         # getting the pose values of the robot by subscribing to the /odom topic              
@@ -32,6 +33,12 @@ class robot():
         self.rot_q= msg.pose.pose.orientation
         (roll,pitch,self.yaw)= euler_from_quaternion([self.rot_q.x,self.rot_q.y,self.rot_q.z,self.rot_q.w]) 
 
+    # def get_pose(self):
+    #     RobotPosition=Pose()
+    #     RobotPosition.point.x=self.robot_pose_x
+    #     RobotPosition.point.y=self.robot_pose_y
+    #     RobotPosition.orientation=self.rot_q
+    #     return RobotPosition
 
     def closest_point(self):
         # call the Laser Class and geting the closest point
@@ -43,12 +50,26 @@ class robot():
         closest_point.y=point_returned.point.y
         return closest_point
 
-    
 
+
+
+
+
+
+# initializes Speed randomly in range of (0.05,1)     
+# -------------------------------------------------------------------------  
+    def initialize_speed(self):
+        speed.linear.x=random.uniform(0.05,1)
+        self.pub.publish(speed)
+
+# -------------------------------------------------------------------------  
     def stop(self):
         speed.linear.x = 0
         speed.angular.z = 0
         self.pub.publish(speed)
+
+
+# Gets the distance to the  point given as argument
 # -------------------------------------------------------------------------  
         
     def euclidean_distance(self, goal_point):
@@ -83,8 +104,8 @@ class robot():
                 speed.angular.z=angular_vel=constant * (angle_diff)
             # rospy.loginfo('angular_vel %s, %s',angular_vel,angle_diff)  
             # angle_diff=self.angle(goal_point) - self.yaw 
-            self.pub.publish(speed)
-        # return angular_vel
+
+        return speed.angular.z
 
 
 
