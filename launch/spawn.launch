@@ -16,15 +16,15 @@
         </node>  -->
         <!-- <node pkg="swarm" name="state_machine" type="state_machine.py" output="screen" args="$(arg robot_name) ">
         </node>  -->
-       <!--  <node pkg="swarm" name="PSO_node" type="PSO_node.py" output="screen" args="$(arg robot_name) ">
-        </node>  -->
-
-
-
-
-
-         <node pkg="swarm" name="Laser2pc" type="laser2pc.py" output="screen" args="$(arg robot_name) ">
+        <node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name) ">
         </node> 
+
+
+
+
+
+        <!--  <node pkg="swarm" name="Laser2pc" type="laser2pc.py" output="screen" args="$(arg robot_name) ">
+        </node>  -->
 
         <rosparam file="$(find swarm)/config/controllers.yaml" command="load"/>
 

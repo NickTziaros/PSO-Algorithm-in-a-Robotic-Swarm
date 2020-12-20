@@ -26,6 +26,8 @@
     <!-- Pass the Robot_name argument to swarm_controll  -->   
     <!-- <node pkg="swarm" name="swarm_control" type="swarm_control.py" output="screen" args="robot_1 robot_2 robot_3 robot_4 robot_5 robot_6 robot_7 robot_8 robot_9 ">
     </node>  -->
+    <node pkg="swarm" name="Get_Gbest" type="gbest_publisher.py" output="screen">
+        </node> 
 
 
     <!-- Show in Rviz   -->
@@ -75,7 +77,7 @@
     <group ns="$(arg robot_name)_5">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true" >
-            <arg name="initial_pose_x" value="2.0"/>
+            <arg name="initial_pose_x" value="10.0"/>
             <arg name="initial_pose_y" value="0.0"/>
             <arg name="robot_name" value="$(arg robot_name)_5"/>
             <param name="tf_prefix" value="$(arg robot_name)_5_tf" />
@@ -85,8 +87,8 @@
     <group ns="$(arg robot_name)_6">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="4.0"/>
-            <arg name="initial_pose_y" value="0.0"/>
+            <arg name="initial_pose_x" value="0.0"/>
+            <arg name="initial_pose_y" value="10.0"/>
             <arg name="robot_name" value="$(arg robot_name)_6"/>
             <param name="tf_prefix" value="$(arg robot_name)_6_tf" />
         </include>
@@ -95,7 +97,7 @@
     <group ns="$(arg robot_name)_7">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="0.0"/>
+            <arg name="initial_pose_x" value="6.0"/>
             <arg name="initial_pose_y" value="4.0"/>
             <arg name="robot_name" value="$(arg robot_name)_7"/>
             <param name="tf_prefix" value="$(arg robot_name)_7_tf" />
@@ -105,8 +107,8 @@
     <group ns="$(arg robot_name)_8">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="2.0"/>
-            <arg name="initial_pose_y" value="4.0"/>
+            <arg name="initial_pose_x" value="-5.0"/>
+            <arg name="initial_pose_y" value="-5.0"/>
             <arg name="robot_name" value="$(arg robot_name)_8"/>
             <param name="tf_prefix" value="$(arg robot_name)_8_tf" />
         </include>
@@ -115,8 +117,8 @@
     <group ns="$(arg robot_name)_9">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="4.0"/>
-            <arg name="initial_pose_y" value="4.0"/>
+            <arg name="initial_pose_x" value="13.0"/>
+            <arg name="initial_pose_y" value="13.0"/>
             <arg name="robot_name" value="$(arg robot_name)_9"/>
             <param name="tf_prefix" value="$(arg robot_name)_9_tf" />
         </include>
@@ -124,7 +126,7 @@
 
 
 
-
+<!-- 
     <group ns="$(arg box_name)_1">
         <include file="$(find swarm)/launch/box_spawn.launch" pass_all_args="true">
             <arg name="initial_pose_x" value="6.0"/>
@@ -132,6 +134,6 @@
             <arg name="box_name" value="$(arg box_name)_1"/>
 
         </include>  
-    </group>
+    </group> -->
 
 </launch>
