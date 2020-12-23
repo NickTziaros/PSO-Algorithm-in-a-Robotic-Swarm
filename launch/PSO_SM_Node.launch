@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<launch>
+	  <arg name="robot_name" default="robot"/>
+	  <!-- rosrun swarm PSO_SM_Node.py __ns:=robot_2 robot_2
+ -->
+
+
+	<group ns="$(arg robot_name)_1">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_1 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_2">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_2 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_3">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_3 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_4">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_4 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_5">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_5 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_6">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_6 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_7">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_7 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_8">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_8 ">
+        </node> 
+
+	</group>
+
+	<group ns="$(arg robot_name)_9">
+		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_9 ">
+        </node> 
+
+	</group>
+
+
+
+
+
+
+
+</launch>

@@ -18,6 +18,10 @@ class robot():
         self.robotname=robotname
         global speed 
         global pub
+        global l
+        l=Laser_ClosestPoint(robotname)
+
+
 
         self.Pbest_point=Point()
         self.next_point=Point()
@@ -59,8 +63,8 @@ class robot():
         point_returned=l.closest_point()
         
         closest_point=Point()
-        closest_point.x=point_returned.point.x
-        closest_point.y=point_returned.point.y
+        closest_point.x=point_returned.x
+        closest_point.y=point_returned.y
         return closest_point
 
     def get_Pbest(self,goal_point):
@@ -105,7 +109,7 @@ class robot():
 
     def linear_vel(self,goal_point, constant=0.07):
         if self.euclidean_distance>4:
-            return 0.3
+            return 0.5
         else:
             return constant * self.euclidean_distance(goal_point)
 
@@ -160,8 +164,27 @@ class robot():
 
 # -------------------------------------------------------------------------
 
-    def avoid_obstacle(self):
-    
-        speed.linear.x=-0.1
-        speed.angular.z=-0.1
-        self.pub.publish(speed)
+    # def avoid_obstacle(self,goal_next_point,safety_radius=0.8):
+    #     obst=self.closest_point()
+    #     obst_d=self.euclidean_distance(obst)
+        
+    #     steerVec = [goal_next_point.x , goal_next_point.y ]
+    #     if obst_d<= safety_radius:
+    #         if obst_d>0.3:  # if the obstacle is closer than rSafe, make sure dSqr is a valid value
+    #             dSqr = 0.000001 # if inside safety radius, dSqr should be very very small
+    #             F = 1/dSqr # Repulsive force proportional to 1/dSqr
+    #             unit_vec=[(self.robot_pose_x - obst.x)/obst_d, (self.robot_pose_y - obst.y)/obst_d]
+    #             f_vec = (unit_vec[0] * F, unit_vec[1] * F)
+                
+    #             steerVec = [steerVec[0] + f_vec[0] , steerVec[1] + f_vec[1]]
+    #             steerVec=self.NormaliseVector(steerVec)
+    #             rospy.loginfo('obst_d %s' ,obst_d )
+    #         else:
+    #             steerVec = [goal_next_point.x , goal_next_point.y ] 
+               
+    #     return steerVec
+
+    # def NormaliseVector(self,v):
+    #     '''Return the normalised vector'''
+    #     d = sqrt(v[0]*v[0] + v[1]*v[1])
+    #     return [v[0]/d, v[1]/d]

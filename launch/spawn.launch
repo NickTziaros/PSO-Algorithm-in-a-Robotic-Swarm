@@ -16,8 +16,8 @@
         </node>  -->
         <!-- <node pkg="swarm" name="state_machine" type="state_machine.py" output="screen" args="$(arg robot_name) ">
         </node>  -->
-        <node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name) ">
-        </node> 
+<!--         <node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name) ">
+        </node>  -->
 
 
 

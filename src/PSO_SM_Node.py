@@ -40,25 +40,12 @@ goal.x=6
 goal.y=6
 Pbest=10000
 next_point=Point()
-# Define PSO Parameters w,c1,r1,c2,r2
+
 sub=rospy.Subscriber('/get_Gbest',Pose,callback)
 pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
 
 
 
-
-class Init_Speed(smach.State):
-	def __init__(self):
-		smach.State.__init__(self, outcomes=['finished', 'failed'])
-
- 
-
-	def execute(self,userdata):
-		speed.linear.x=r.initialize_speed()
-		pub.publish(speed)
-		print(speed.linear.x)
-		rospy.sleep(1)
-		return 'finished'
 
 
 class PSO(smach.State):
@@ -71,6 +58,7 @@ class PSO(smach.State):
 
 
 	def execute(self, userdata):
+
 		obst=l.closest_point()
 		obst_dist=r.euclidean_distance(obst)
 		goal_dist=r.euclidean_distance(goal)
@@ -91,6 +79,7 @@ class Go2Point(smach.State):
 		goal=Point()
 		goal.x=6
 		goal.y=6
+		self.next_point_obs=Point()
 
 
 
@@ -100,15 +89,21 @@ class Go2Point(smach.State):
 	def execute(self, userdata):
 			next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
+			# self.next_point_obs=next_point
 	 		while  r.euclidean_distance(next_point)>=0.05:
 	 			# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
-	 			speed.angular.z=r.angular_vel(next_point)
+				# steer_vec=r.avoid_obstacle(next_point)
+				# self.next_point_obs.x=steer_vec[0]
+				# self.next_point_obs.y=steer_vec[1]
+				speed.angular.z=r.angular_vel(next_point)
 				speed.linear.x = r.linear_vel(next_point)
+				# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
 				pub.publish(speed)
-				# rospy.loginfo('Distance %s' ,r.euclidean_distance(goal) )
-				next_point=userdata.next_point_in
-				# return 'failed'
-				if r.euclidean_distance(goal)<0.3:
+				# next_point=userdata.next_point_in
+				# steer_vec=r.avoid_obstacle(next_point)
+				# self.next_point_obs.x=steer_vec[0]
+				# self.next_point_obs.y=steer_vec[1]
+				if r.euclidean_distance(goal)<0.5:
 					return 'finished2'
 			return 'finished'
 			
@@ -147,8 +142,7 @@ if __name__ == '__main__':
 	# Adding states
 	with sm:
 
-		smach.StateMachine.add('Init_Speed', Init_Speed(),
-                                transitions={'finished': 'PSO', 'failed': 'PSO'})
+		
 		smach.StateMachine.add('PSO', PSO(),
                                 transitions={'finished': 'Go2Point', 'failed': 'PSO'}, remapping={'next_point_out':'sm_next_point'})
 		smach.StateMachine.add('Go2Point', Go2Point(),
