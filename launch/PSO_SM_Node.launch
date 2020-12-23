@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 	  <arg name="robot_name" default="robot"/>
-	  <!-- rosrun swarm PSO_SM_Node.py __ns:=robot_2 robot_2
+	  <!--source devel/setup.bash && rosrun swarm PSO_SM_Node.py __ns:=robot_4 robot_4
  -->
 
 

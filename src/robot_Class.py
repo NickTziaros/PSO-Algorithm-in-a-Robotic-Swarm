@@ -164,27 +164,32 @@ class robot():
 
 # -------------------------------------------------------------------------
 
-    # def avoid_obstacle(self,goal_next_point,safety_radius=0.8):
+    # def avoid_obstacle_simple(self,goal_next_point,safety_radius=0.8):
     #     obst=self.closest_point()
     #     obst_d=self.euclidean_distance(obst)
-        
-    #     steerVec = [goal_next_point.x , goal_next_point.y ]
-    #     if obst_d<= safety_radius:
-    #         if obst_d>0.3:  # if the obstacle is closer than rSafe, make sure dSqr is a valid value
-    #             dSqr = 0.000001 # if inside safety radius, dSqr should be very very small
-    #             F = 1/dSqr # Repulsive force proportional to 1/dSqr
-    #             unit_vec=[(self.robot_pose_x - obst.x)/obst_d, (self.robot_pose_y - obst.y)/obst_d]
-    #             f_vec = (unit_vec[0] * F, unit_vec[1] * F)
-                
-    #             steerVec = [steerVec[0] + f_vec[0] , steerVec[1] + f_vec[1]]
-    #             steerVec=self.NormaliseVector(steerVec)
-    #             rospy.loginfo('obst_d %s' ,obst_d )
+    #     while obst_d<0.8:
+            
     #         else:
-    #             steerVec = [goal_next_point.x , goal_next_point.y ] 
-               
-    #     return steerVec
+    #             pass
+            
+# while obst_dist<0.8:
+#                     if obst_dist>0.3: 
+#                         angle_obst=r.angle(obst)
+#                         # print(angle_obst)
+#                         angle_next_point=r.angle(goal_next_point)
+#                         # print(angle_next_point)
 
-    # def NormaliseVector(self,v):
-    #     '''Return the normalised vector'''
-    #     d = sqrt(v[0]*v[0] + v[1]*v[1])
-    #     return [v[0]/d, v[1]/d]
+#                         angle_diff=angle_next_point-angle_obst
+#                         print(angle_diff)
+#                         if angle_diff>0:
+#                             speed.linear.x=0.3
+#                             speed.angular.z=-0.3
+
+#                         else:
+#                             speed.linear.x=0.3
+#                             speed.angular.z=0.3
+#                         pub.publish(speed)
+#                         obst=l.closest_point()
+#                         obst_dist=r.euclidean_distance(obst)
+#                     else:
+#                         pass

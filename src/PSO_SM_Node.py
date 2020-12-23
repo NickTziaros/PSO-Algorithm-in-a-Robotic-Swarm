@@ -22,29 +22,6 @@ def euclidean_distance( goal_point_x,goal_point_y,robot_pose_x, robot_pose_y):
 	return distance
 
 
-args=rospy.myargv(argv=sys.argv)
-robotname= args[1]
-rospy.init_node("PSO_node")
-global l
-global r
-global next_point
-global pub
-global speed
-l=Laser_ClosestPoint(robotname)
-r=robot(robotname)
-Gbest=Point()
-# define_goal
-speed=Twist()
-goal=Point()
-goal.x=6
-goal.y=6
-Pbest=10000
-next_point=Point()
-
-sub=rospy.Subscriber('/get_Gbest',Pose,callback)
-pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
-
-
 
 
 
@@ -123,7 +100,27 @@ class Wait(smach.State):
 if __name__ == '__main__':
 	args=rospy.myargv(argv=sys.argv)
 	robotname= args[1]
-	rospy.init_node("PSO_node".format(robotname))
+	rospy.init_node("PSO_node")
+	Gbest=Point()
+	sub=rospy.Subscriber('/get_Gbest',Pose,callback)
+	global l
+	global r
+	global next_point
+	global pub
+	global speed
+	l=Laser_ClosestPoint(robotname)
+	r=robot(robotname)
+
+	# define_goal
+	speed=Twist()
+	goal=Point()
+	goal.x=6
+	goal.y=6
+	Pbest=10000
+	next_point=Point()
+	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
+	rate = rospy.Rate(10)
+	rate.sleep()
 	
 			
 	sm =smach.StateMachine(outcomes=['I_have_finished'])
