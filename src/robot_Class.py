@@ -164,7 +164,7 @@ class robot():
 
 # -------------------------------------------------------------------------
 # The function that returns the angular velocity of the obstacles potential field
-    def avoid_obstacle(self,safety_radius=1):
+    def get_apf_vel(self,safety_radius=1):
         obst=self.closest_point()
         obst_d=self.euclidean_distance(obst)
         yaw_deg=round(self.yaw * (180 / pi), 4);

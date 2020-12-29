@@ -75,7 +75,7 @@ class Go2Point(smach.State):
 				goal_angular_speed=r.angular_vel_deg(next_point)
 
 				goal_linear_speed = r.linear_vel(next_point)
-				obst_angular_speed=r.avoid_obstacle()
+				obst_angular_speed=r.get_apf_vel()
 
 				speed.linear.x=goal_linear_speed
 				speed.angular.z=goal_angular_speed+obst_angular_speed

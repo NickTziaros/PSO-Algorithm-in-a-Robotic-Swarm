@@ -55,7 +55,7 @@ while not rospy.is_shutdown() :
 
 		goal_linear_speed =r.linear_vel(goal)
 		# r.linear_vel(goal)
-		obst_angular_speed=r.avoid_obstacle()
+		obst_angular_speed=r.get_apf_vel()
 		rospy.loginfo('obst %s' ,obst_angular_speed )
 		rospy.loginfo('goal %s' , goal_angular_speed )
 		speed.linear.x=goal_linear_speed
