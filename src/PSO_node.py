@@ -5,6 +5,7 @@ from 	geometry_msgs.msg import Twist,Point,Pose
 from 	nav_msgs.msg import Odometry
 from    Laser_Class import Laser_ClosestPoint
 from 	robot_Class import robot
+from    math    import sqrt,pow,atan2,pi
 
 
 
@@ -28,40 +29,63 @@ global l
 global r
 l=Laser_ClosestPoint(robotname)
 r=robot(robotname)
-Gbest=Point()
-# define_goal
+# Gbest=Point()
+# # define_goal
 speed=Twist()
 goal=Point()
 goal.x=6
 goal.y=6
-Pbest=10000
-next_point=Point()
-# Define PSO Parameters w,c1,r1,c2,r2
+# Pbest=10000
+# next_point=Point()
+# # Define PSO Parameters w,c1,r1,c2,r2
 sub=rospy.Subscriber('/get_Gbest',Pose,callback)
 pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
 epoch=0
 
 
 while not rospy.is_shutdown() :
-	while  r.euclidean_distance(next_point)>=0.4:
 		obst=l.closest_point()
 		obst_dist=r.euclidean_distance(obst)
 		goal_dist=r.euclidean_distance(goal)
 		#get Pbest
-		Pbest=r.get_Pbest(goal)
-		next_point=r.get_next_point(Pbest,Gbest,obst)
+		angle=r.angle(obst)
+		angle_goal=r.angle(goal)
 
-		rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
-		epoch=epoch+1
-		rospy.loginfo('Epoch:%s' , epoch )
+		goal_angular_speed=r.angular_vel_deg(goal)
 
+		goal_linear_speed =r.linear_vel(goal)
+		# r.linear_vel(goal)
+		obst_angular_speed=r.avoid_obstacle()
+		rospy.loginfo('obst %s' ,obst_angular_speed )
+		rospy.loginfo('goal %s' , goal_angular_speed )
+		speed.linear.x=goal_linear_speed
+		speed.angular.z=goal_angular_speed+obst_angular_speed
+		print(speed.angular.z)
+
+
+
+# ----------------------
+		# print(round(r.yaw * (180 / pi), 4))
+		# angle_degrees = round(angle * (180 / pi), 4);
+		# angle_gdegrees = round(angle_goal * (180 / pi), 4);
+		# angle_diff=angle_gdegrees-round(r.yaw * (180 / pi), 4)
+		# if abs(angle_diff)>1:
+		# 	if angle_diff>90:
+		# 		speed.angular.z= -0.05*(angle_gdegrees-round(r.yaw * (180 / pi), 4))
+		# 	else:
+		# 		speed.angular.z= -0.05*(angle_gdegrees-round(r.yaw * (180 / pi), 4))
+		# 	print(angle_diff)
+		# 	pub.publish(speed)
+		# print(angle_diff)
+		# rospy.loginfo('%s' , angle_degrees )
+		# rospy.loginfo('g     %s' , angle_gdegrees )
+#-------------------------	
 		# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
-		speed.angular.z=r.angular_vel(next_point)
-		speed.linear.x = r.linear_vel(next_point)
+		# speed.angular.z=r.angular_vel(next_point)
+		# speed.linear.x = r.linear_vel(next_point)
 		pub.publish(speed)
-		rospy.loginfo('Distance %s' ,r.euclidean_distance(goal) )
+		# rospy.loginfo('Distance %s' ,r.euclidean_distance(goal) )
 
-	r.stop()
 
 if __name__ == '__main__':
 	rospy.spin()

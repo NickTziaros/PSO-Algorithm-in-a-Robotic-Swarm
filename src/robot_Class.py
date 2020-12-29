@@ -77,17 +77,17 @@ class robot():
     def get_next_point(self,Gbest,Pbest,obst):
         self.next_point.x=w*(self.robot_pose_x)+c1*numpy.random.uniform(0,1)*(Pbest.x-self.robot_pose_x)+c2*numpy.random.uniform(0,1)*(Gbest.x-self.robot_pose_x)-c3*numpy.random.uniform(0,1)*(obst.x-self.robot_pose_x)
         self.next_point.y=w*(self.robot_pose_y)+c1*numpy.random.uniform(0,1)*(Pbest.y-self.robot_pose_y)+c2*numpy.random.uniform(0,1)*(Gbest.y-self.robot_pose_y)-c3*numpy.random.uniform(0,1)*(obst.y-self.robot_pose_y)
-        rospy.loginfo('%s' , self.robotname )
+        rospy.loginfo('--------------%s' , self.robotname )
         rospy.loginfo(' Pbest X: %s Y:%s' , Gbest.x,Gbest.y )
         rospy.loginfo('Gbest X: %s Y:%s' , Pbest.x,Pbest.y )
         rospy.loginfo('next_point X: %s Y:%s' , self.next_point.x,self.next_point.y )
         return self.next_point
 # initializes Speed randomly in range of (0.05,1)     
 # -------------------------------------------------------------------------  
-    def initialize_speed(self):
-        speed.linear.x=numpy.random.uniform(0.05,1)
-        self.pub.publish(speed)
-        return speed.linear.x
+    # def initialize_speed(self):
+    #     speed.linear.x=numpy.random.uniform(0.05,1)
+    #     self.pub.publish(speed)
+    #     return speed.linear.x
 
 # -------------------------------------------------------------------------  
     def stop(self):
@@ -118,6 +118,13 @@ class robot():
 
     def angle (self,goal_point):
         desired_angle_goal=atan2(goal_point.y- self.robot_pose_y,goal_point.x- self.robot_pose_x)
+
+        return desired_angle_goal
+# -------------------------------------------------------------------------  
+# Same as above but uses degrees(preferred)
+    def angle_deg (self,goal_point):
+        desired_angle_goal=atan2(goal_point.y- self.robot_pose_y,goal_point.x- self.robot_pose_x)
+        desired_angle_goal = round(desired_angle_goal * (180 / pi), 4);
         return desired_angle_goal
 
 # -------------------------------------------------------------------------  
@@ -133,63 +140,48 @@ class robot():
             # angle_diff=self.angle(goal_point) - self.yaw 
 
         return speed.angular.z
+# -------------------------------------------------------------------------  
+# Same as above but uses degrees(preferred)
+    def angular_vel_deg(self, goal_point, constant=0.1):
+        yaw_deg=round(self.yaw * (180 / pi), 4);
+        angle_diff=self.angle_deg(goal_point) - yaw_deg
+        # rospy.loginfo('yaw_deg   %s',yaw_deg)
+        # rospy.loginfo('angle goal%s',self.angle_deg(goal_point))
+
+        if abs(angle_diff )> 0.1 :
+            if abs(angle_diff) < 180: 
+                speed.angular.z=-constant * (angle_diff)
+            else:
+                speed.angular.z=constant * (angle_diff)
+           
+
+       
+        return speed.angular.z
 
 
 
-# -------------------------------------------------------------------------    
-    # def go2goal(self):
-        
-    #     while not rospy.is_shutdown() :
-    #         # goal_point= the point closer to the robot that the Class Laser_class returns
-    #         self.goal_point=self.closest_point()
-    #         # self.goal_point=self.test
-
-
-
-
-    #         while  self.euclidean_distance(self.goal_point)>=1:
-    #             # self.pc.PrintArray()
-    #             self.angular_vel(self.goal_point)
-    #             speed.linear.x = self.linear_vel(self.goal_point)
-    #             rospy.loginfo('X: %s Y: %s',self.goal_point.x,self.goal_point.y )
-    #             # rospy.loginfo('X: %s Y: %s',self.robot_pose_x,self.robot_pose_y )
-    #             rospy.loginfo('distance: %s',self.euclidean_distance(self.goal_point))
-    #         # Publishing our vel_msg
-    #             self.pub.publish(speed)
-    #             self.goal_point=self.closest_point()
-
-    #         return True  
-    #         # rospy.spin()
 
 
 # -------------------------------------------------------------------------
+# The function that returns the angular velocity of the obstacles potential field
+    def avoid_obstacle(self,safety_radius=1):
+        obst=self.closest_point()
+        obst_d=self.euclidean_distance(obst)
+        yaw_deg=round(self.yaw * (180 / pi), 4);
+        if (obst_d<safety_radius) & (obst_d>0.2):
+            angle_obst=self.angle_deg(obst)-yaw_deg
+           
 
-    # def avoid_obstacle_simple(self,goal_next_point,safety_radius=0.8):
-    #     obst=self.closest_point()
-    #     obst_d=self.euclidean_distance(obst)
-    #     while obst_d<0.8:
-            
-    #         else:
-    #             pass
-            
-# while obst_dist<0.8:
-#                     if obst_dist>0.3: 
-#                         angle_obst=r.angle(obst)
-#                         # print(angle_obst)
-#                         angle_next_point=r.angle(goal_next_point)
-#                         # print(angle_next_point)
+            if abs(angle_obst)>0.1 :
+                if abs(angle_obst)<180 :
+                    obst_ang_speed=-6*(safety_radius/obst_d)
+                    # print(obst_ang_speed)
+                    
+                else:
+                    obst_ang_speed=6*(safety_radius/obst_d)
 
-#                         angle_diff=angle_next_point-angle_obst
-#                         print(angle_diff)
-#                         if angle_diff>0:
-#                             speed.linear.x=0.3
-#                             speed.angular.z=-0.3
 
-#                         else:
-#                             speed.linear.x=0.3
-#                             speed.angular.z=0.3
-#                         pub.publish(speed)
-#                         obst=l.closest_point()
-#                         obst_dist=r.euclidean_distance(obst)
-#                     else:
-#                         pass
+                return obst_ang_speed  
+
+        else:
+            return 0

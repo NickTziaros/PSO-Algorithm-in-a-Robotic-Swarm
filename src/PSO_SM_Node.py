@@ -67,20 +67,25 @@ class Go2Point(smach.State):
 			next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
 			# self.next_point_obs=next_point
-	 		while  r.euclidean_distance(next_point)>=0.05:
+	 		while r.euclidean_distance(next_point)>=0.05:
 	 			# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
 				# steer_vec=r.avoid_obstacle(next_point)
 				# self.next_point_obs.x=steer_vec[0]
 				# self.next_point_obs.y=steer_vec[1]
-				speed.angular.z=r.angular_vel(next_point)
-				speed.linear.x = r.linear_vel(next_point)
+				goal_angular_speed=r.angular_vel_deg(next_point)
+
+				goal_linear_speed = r.linear_vel(next_point)
+				obst_angular_speed=r.avoid_obstacle()
+
+				speed.linear.x=goal_linear_speed
+				speed.angular.z=goal_angular_speed+obst_angular_speed
 				# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
 				pub.publish(speed)
 				# next_point=userdata.next_point_in
 				# steer_vec=r.avoid_obstacle(next_point)
 				# self.next_point_obs.x=steer_vec[0]
 				# self.next_point_obs.y=steer_vec[1]
-				if r.euclidean_distance(goal)<0.5:
+				if r.euclidean_distance(goal)<1:
 					return 'finished2'
 			return 'finished'
 			
