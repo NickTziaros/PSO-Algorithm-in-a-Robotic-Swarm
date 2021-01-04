@@ -4,7 +4,7 @@ import 	sys
 from    nav_msgs.msg import Odometry
 from 	geometry_msgs.msg import Twist,Point,Pose
 from    tf.transformations import euler_from_quaternion
-from 	robot_Class import robot
+from 	robot_Class import get_goal
 from    math    import sqrt,pow
 import 	message_filters
 
@@ -77,8 +77,7 @@ pub = rospy.Publisher("get_Gbest",Pose, queue_size=10)
 Gbest_pose=Pose()
 global goal
 goal=Point()
-goal.x=6
-goal.y=6
+goal.x,goal.y=get_goal()
 
 sub_1=message_filters.Subscriber('/robot_1/odom',Odometry)
 sub_2=message_filters.Subscriber('/robot_2/odom',Odometry)

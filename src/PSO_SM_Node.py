@@ -4,7 +4,7 @@ import 	sys
 from 	geometry_msgs.msg import Twist,Point,Pose
 from 	nav_msgs.msg import Odometry
 from    Laser_Class import Laser_ClosestPoint
-from 	robot_Class import robot
+from 	robot_Class import *
 import	smach
 import  smach_ros
 
@@ -53,9 +53,8 @@ class PSO(smach.State):
 class Go2Point(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=['finished','failed','finished2'],input_keys=['next_point_in'])
-		goal=Point()
-		goal.x=6
-		goal.y=6
+		# goal=Point()
+		# goal.x,goal.y=get_goal()
 		self.next_point_obs=Point()
 
 
@@ -67,27 +66,29 @@ class Go2Point(smach.State):
 			next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
 			# self.next_point_obs=next_point
-	 		while r.euclidean_distance(next_point)>=0.05:
-	 			# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
-				# steer_vec=r.avoid_obstacle(next_point)
-				# self.next_point_obs.x=steer_vec[0]
-				# self.next_point_obs.y=steer_vec[1]
-				goal_angular_speed=r.angular_vel_deg(next_point)
+			if r.euclidean_distance(goal)>2:
+	 			if r.euclidean_distance(next_point)>0:
+		 			# rospy.loginfo('X: %s Y: %s',goal_point.x,goal_point.y )
+					# steer_vec=r.avoid_obstacle(next_point)
+					# self.next_point_obs.x=steer_vec[0]
+					# self.next_point_obs.y=steer_vec[1]
+					goal_angular_speed=r.angular_vel_deg(next_point)
 
-				goal_linear_speed = r.linear_vel(next_point)
-				obst_angular_speed=r.get_apf_vel()
+					goal_linear_speed = r.linear_vel(next_point)
+					obst_angular_speed=r.get_apf_vel()
 
-				speed.linear.x=goal_linear_speed
-				speed.angular.z=goal_angular_speed+obst_angular_speed
-				# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
-				pub.publish(speed)
-				# next_point=userdata.next_point_in
-				# steer_vec=r.avoid_obstacle(next_point)
-				# self.next_point_obs.x=steer_vec[0]
-				# self.next_point_obs.y=steer_vec[1]
-				if r.euclidean_distance(goal)<1:
-					return 'finished2'
-			return 'finished'
+					speed.linear.x=goal_linear_speed
+					speed.angular.z=goal_angular_speed+obst_angular_speed
+					# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
+					pub.publish(speed)
+					# next_point=userdata.next_point_in
+					# steer_vec=r.avoid_obstacle(next_point)
+					# self.next_point_obs.x=steer_vec[0]
+					# self.next_point_obs.y=steer_vec[1]
+				
+				return 'finished'
+			else:
+				return 'finished2'
 			
 class Wait(smach.State):
 	def __init__(self):
@@ -111,6 +112,7 @@ if __name__ == '__main__':
 	global l
 	global r
 	global next_point
+	global goal
 	global pub
 	global speed
 	l=Laser_ClosestPoint(robotname)
@@ -119,8 +121,7 @@ if __name__ == '__main__':
 	# define_goal
 	speed=Twist()
 	goal=Point()
-	goal.x=6
-	goal.y=6
+	goal.x,goal.y=get_goal()
 	Pbest=10000
 	next_point=Point()
 	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)

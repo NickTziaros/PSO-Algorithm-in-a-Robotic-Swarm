@@ -31,11 +31,11 @@ class robot():
         self.rate = rospy.Rate(10)
         self.rate.sleep()
         global w
-        w=1.05
+        w=1
         global c1
         c1=2
         global c2
-        c2=2
+        c2=1
         global c3
         c3=0
         self.Pbest_point.x=self.robot_pose_x
@@ -148,7 +148,7 @@ class robot():
         # rospy.loginfo('yaw_deg   %s',yaw_deg)
         # rospy.loginfo('angle goal%s',self.angle_deg(goal_point))
 
-        if abs(angle_diff )> 0.1 :
+        if abs(angle_diff )> 0 :
             if abs(angle_diff) < 180: 
                 speed.angular.z=-constant * (angle_diff)
             else:
@@ -172,7 +172,7 @@ class robot():
             angle_obst=self.angle_deg(obst)-yaw_deg
            
 
-            if abs(angle_obst)>0.1 :
+            if abs(angle_obst)>0 :
                 if abs(angle_obst)<180 :
                     obst_ang_speed=-6*(safety_radius/obst_d)
                     # print(obst_ang_speed)
@@ -185,3 +185,9 @@ class robot():
 
         else:
             return 0
+
+def get_goal():
+    goal_x=10
+    goal_y=10
+    return goal_x,goal_y
+        
