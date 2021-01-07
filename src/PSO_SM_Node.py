@@ -45,7 +45,7 @@ class PSO(smach.State):
 		# userdata.next_point_out=r.get_next_point(self.Pbest,Gbest,obst)
 		# rospy.loginfo('X: %s Y:%s' , self.Pbest.x ,self.Pbest.y )
 		self.epoch=self.epoch+1
-		rospy.loginfo('Epoch:%s' , self.epoch )
+		# rospy.loginfo('Epoch:%s' , self.epoch )
 		return 'finished'
 
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 	Pbest=10000
 	next_point=Point()
 	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
-	rate = rospy.Rate(10)
+	rate = rospy.Rate(1)
 	rate.sleep()
 	
 			

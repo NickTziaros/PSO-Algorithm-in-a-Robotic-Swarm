@@ -31,9 +31,9 @@ class robot():
         self.rate = rospy.Rate(10)
         self.rate.sleep()
         global w
-        w=1
+        w=0.8
         global c1
-        c1=2
+        c1=5
         global c2
         c2=1
         global c3
@@ -77,10 +77,10 @@ class robot():
     def get_next_point(self,Gbest,Pbest,obst):
         self.next_point.x=w*(self.robot_pose_x)+c1*numpy.random.uniform(0,1)*(Pbest.x-self.robot_pose_x)+c2*numpy.random.uniform(0,1)*(Gbest.x-self.robot_pose_x)-c3*numpy.random.uniform(0,1)*(obst.x-self.robot_pose_x)
         self.next_point.y=w*(self.robot_pose_y)+c1*numpy.random.uniform(0,1)*(Pbest.y-self.robot_pose_y)+c2*numpy.random.uniform(0,1)*(Gbest.y-self.robot_pose_y)-c3*numpy.random.uniform(0,1)*(obst.y-self.robot_pose_y)
-        rospy.loginfo('--------------%s' , self.robotname )
-        rospy.loginfo(' Pbest X: %s Y:%s' , Gbest.x,Gbest.y )
-        rospy.loginfo('Gbest X: %s Y:%s' , Pbest.x,Pbest.y )
-        rospy.loginfo('next_point X: %s Y:%s' , self.next_point.x,self.next_point.y )
+        # rospy.loginfo('--------------%s' , self.robotname )
+        # rospy.loginfo(' Pbest X: %s Y:%s' , Gbest.x,Gbest.y )
+        # rospy.loginfo('Gbest X: %s Y:%s' , Pbest.x,Pbest.y )
+        # rospy.loginfo('next_point X: %s Y:%s' , self.next_point.x,self.next_point.y )
         return self.next_point
 # initializes Speed randomly in range of (0.05,1)     
 # -------------------------------------------------------------------------  
@@ -107,7 +107,7 @@ class robot():
 
 # -------------------------------------------------------------------------  
 
-    def linear_vel(self,goal_point, constant=0.07):
+    def linear_vel(self,goal_point, constant=0.1):
         if self.euclidean_distance>4:
             return 0.5
         else:
@@ -142,13 +142,13 @@ class robot():
         return speed.angular.z
 # -------------------------------------------------------------------------  
 # Same as above but uses degrees(preferred)
-    def angular_vel_deg(self, goal_point, constant=0.1):
+    def angular_vel_deg(self, goal_point, constant=0.08):
         yaw_deg=round(self.yaw * (180 / pi), 4);
         angle_diff=self.angle_deg(goal_point) - yaw_deg
         # rospy.loginfo('yaw_deg   %s',yaw_deg)
         # rospy.loginfo('angle goal%s',self.angle_deg(goal_point))
 
-        if abs(angle_diff )> 0 :
+        if abs(angle_diff )> 1 :
             if abs(angle_diff) < 180: 
                 speed.angular.z=-constant * (angle_diff)
             else:
@@ -164,30 +164,39 @@ class robot():
 
 # -------------------------------------------------------------------------
 # The function that returns the angular velocity of the obstacles potential field
-    def get_apf_vel(self,safety_radius=1):
+    def get_apf_vel(self,safety_radius=1.5):
         obst=self.closest_point()
         obst_d=self.euclidean_distance(obst)
         yaw_deg=round(self.yaw * (180 / pi), 4);
-        if (obst_d<safety_radius) & (obst_d>0.2):
-            angle_obst=self.angle_deg(obst)-yaw_deg
+        angle_obst=self.angle_deg(obst)-yaw_deg
+        if (obst_d<safety_radius) & (obst_d>0.3):
+            
            
 
             if abs(angle_obst)>0 :
                 if abs(angle_obst)<180 :
-                    obst_ang_speed=-6*(safety_radius/obst_d)
+                    obst_ang_speed=-4*(safety_radius/obst_d)
                     # print(obst_ang_speed)
                     
                 else:
-                    obst_ang_speed=6*(safety_radius/obst_d)
+                    obst_ang_speed=4*(safety_radius/obst_d)
 
 
-                return obst_ang_speed  
-
+            return obst_ang_speed  
+        if (obst_d<0.4) & (obst_d>0.3):
+            if abs(angle_obst)>0 :
+                if abs(angle_obst)<180 :
+                    obst_ang_speed=-100*(safety_radius/obst_d)
+                    # print(obst_ang_speed)
+                    
+                else:
+                    obst_ang_speed=100*(safety_radius/obst_d)
+            return obst_ang_speed
         else:
             return 0
 
 def get_goal():
-    goal_x=10
-    goal_y=10
+    goal_x=0
+    goal_y=0
     return goal_x,goal_y
         

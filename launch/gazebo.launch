@@ -15,6 +15,7 @@
     command="$(find xacro)/xacro.py $(find swarm)/urdf/robot_description.urdf.xacro" />
 
         <!--  ******************** Gazebo ********************  -->
+        <!-- empty_world.launch -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="use_sim_time" value="true"/>
         <arg name="debug" value="false"/>
@@ -36,8 +37,8 @@
     <!-- Set different initial poses to avoid collision when spawning the model -->
     <group ns="$(arg robot_name)_1">
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="0.0"/>
-            <arg name="initial_pose_y" value="2.0"/>
+            <arg name="initial_pose_x" value="-10.0"/>
+            <arg name="initial_pose_y" value="-10.0"/>
             <arg name="robot_name" value="$(arg robot_name)_1"/>
             <param name="tf_prefix" value="$(arg robot_name)_1_tf" />
         </include>  
@@ -46,8 +47,8 @@
     <group ns="$(arg robot_name)_2">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="2.0"/>
-            <arg name="initial_pose_y" value="2.0"/>
+            <arg name="initial_pose_x" value="-12.0"/>
+            <arg name="initial_pose_y" value="-12.0"/>
             <arg name="robot_name" value="$(arg robot_name)_2"/>
             <param name="tf_prefix" value="$(arg robot_name)_2_tf" />
         </include>
@@ -57,8 +58,8 @@
     <group ns="$(arg robot_name)_3">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="4.0"/>
-            <arg name="initial_pose_y" value="2.0"/>
+            <arg name="initial_pose_x" value="10.0"/>
+            <arg name="initial_pose_y" value="10.0"/>
             <arg name="robot_name" value="$(arg robot_name)_3"/>
             <param name="tf_prefix" value="$(arg robot_name)_3_tf" />
         </include>
@@ -67,8 +68,8 @@
     <group ns="$(arg robot_name)_4">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="0.0"/>
-            <arg name="initial_pose_y" value="0.0"/>
+            <arg name="initial_pose_x" value="12.0"/>
+            <arg name="initial_pose_y" value="12.0"/>
             <arg name="robot_name" value="$(arg robot_name)_4"/>
             <param name="tf_prefix" value="$(arg robot_name)_4_tf" />
         </include>
@@ -77,8 +78,8 @@
     <group ns="$(arg robot_name)_5">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true" >
-            <arg name="initial_pose_x" value="10.0"/>
-            <arg name="initial_pose_y" value="0.0"/>
+            <arg name="initial_pose_x" value="-10.0"/>
+            <arg name="initial_pose_y" value="10.0"/>
             <arg name="robot_name" value="$(arg robot_name)_5"/>
             <param name="tf_prefix" value="$(arg robot_name)_5_tf" />
         </include>
@@ -87,8 +88,8 @@
     <group ns="$(arg robot_name)_6">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="0.0"/>
-            <arg name="initial_pose_y" value="10.0"/>
+            <arg name="initial_pose_x" value="-12.0"/>
+            <arg name="initial_pose_y" value="12.0"/>
             <arg name="robot_name" value="$(arg robot_name)_6"/>
             <param name="tf_prefix" value="$(arg robot_name)_6_tf" />
         </include>
@@ -97,8 +98,8 @@
     <group ns="$(arg robot_name)_7">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="6.0"/>
-            <arg name="initial_pose_y" value="4.0"/>
+            <arg name="initial_pose_x" value="10.0"/>
+            <arg name="initial_pose_y" value="-10.0"/>
             <arg name="robot_name" value="$(arg robot_name)_7"/>
             <param name="tf_prefix" value="$(arg robot_name)_7_tf" />
         </include>
@@ -107,8 +108,8 @@
     <group ns="$(arg robot_name)_8">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="-5.0"/>
-            <arg name="initial_pose_y" value="-5.0"/>
+            <arg name="initial_pose_x" value="12.0"/>
+            <arg name="initial_pose_y" value="-12.0"/>
             <arg name="robot_name" value="$(arg robot_name)_8"/>
             <param name="tf_prefix" value="$(arg robot_name)_8_tf" />
         </include>
@@ -117,8 +118,8 @@
     <group ns="$(arg robot_name)_9">
 
         <include file="$(find swarm)/launch/spawn.launch" pass_all_args="true">
-            <arg name="initial_pose_x" value="13.0"/>
-            <arg name="initial_pose_y" value="13.0"/>
+            <arg name="initial_pose_x" value="14.0"/>
+            <arg name="initial_pose_y" value="14.0"/>
             <arg name="robot_name" value="$(arg robot_name)_9"/>
             <param name="tf_prefix" value="$(arg robot_name)_9_tf" />
         </include>
