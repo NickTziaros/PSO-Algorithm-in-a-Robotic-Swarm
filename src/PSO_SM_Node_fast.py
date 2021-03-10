@@ -7,7 +7,6 @@ from    Laser_Class import Laser_ClosestPoint
 from 	robot_Class import *
 import	smach
 import  smach_ros
-import  time
 
 
 def get_Pbest():
@@ -67,32 +66,28 @@ class Go2Point(smach.State):
 			next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
 			# self.next_point_obs=next_point
-	 		while r.euclidean_distance(next_point)>0.2:
-				# steer_vec=r.avoid_obstacle(next_point)
-				# self.next_point_obs.x=steer_vec[0]
-				# self.next_point_obs.y=steer_vec[1]
-				goal_angular_speed=r.angular_vel_deg(next_point)
-				# obst_angular_speed,apf_linear_scaler=r.get_apf_vel()
+			if r.euclidean_distance(goal)>2:
+	 			if r.euclidean_distance(next_point)>0.4:
+					# steer_vec=r.avoid_obstacle(next_point)
+					# self.next_point_obs.x=steer_vec[0]
+					# self.next_point_obs.y=steer_vec[1]
+					goal_angular_speed=r.angular_vel_deg(next_point)
 
-				goal_linear_speed = r.linear_vel(next_point)
-				obst_angular_speed=r.get_apf_vel(next_point)
-				speed.linear.x=goal_linear_speed
-				# speed.linear.x=goal_linear_speed*apf_linear_scaler
+					goal_linear_speed = r.linear_vel(next_point)
+					obst_angular_speed=r.get_apf_vel()
+
+					speed.linear.x=goal_linear_speed
+					speed.angular.z=goal_angular_speed+obst_angular_speed
+					# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
+					pub.publish(speed)
+					# next_point=userdata.next_point_in
+					# steer_vec=r.avoid_obstacle(next_point)
+					# self.next_point_obs.x=steer_vec[0]
+					# self.next_point_obs.y=steer_vec[1]
 				
-				speed.angular.z=goal_angular_speed+obst_angular_speed
-				# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
-				pub.publish(speed)
-				# next_point=userdata.next_point_in
-				# steer_vec=r.avoid_obstacle(next_point)
-				# self.next_point_obs.x=steer_vec[0]
-				# self.next_point_obs.y=steer_vec[1]
-				
-				if r.euclidean_distance(goal)<2:
-					return 'finished2'
-					print("lol")
-			return 'finished'
-			
-			
+				return 'finished'
+			else:
+				return 'finished2'
 			
 class Wait(smach.State):
 	def __init__(self):
@@ -102,7 +97,7 @@ class Wait(smach.State):
 
 	def execute(self, userdata):
 		r.stop()
-		time.sleep(5)
+		rospy.sleep(10)
 		return 'finished'
 
 
@@ -129,7 +124,7 @@ if __name__ == '__main__':
 	Pbest=10000
 	next_point=Point()
 	pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
-	rate = rospy.Rate(5)
+	rate = rospy.Rate(1)
 	rate.sleep()
 	
 			

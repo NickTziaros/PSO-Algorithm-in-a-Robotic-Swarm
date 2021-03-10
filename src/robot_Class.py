@@ -2,7 +2,7 @@
 import  rospy
 from    geometry_msgs.msg import Twist,Point,Pose
 from    nav_msgs.msg import Odometry
-from    math    import sqrt,pow,atan2,pi
+from    math    import sqrt,pow,atan2,pi,cos,sin
 from    tf.transformations import euler_from_quaternion
 from    Laser_Class import Laser_ClosestPoint
 from    GetGoalPoint import GetGoalPoint
@@ -25,17 +25,21 @@ class robot():
 
         self.Pbest_point=Point()
         self.next_point=Point()
+        self.apf_point=Point()
         speed=Twist()
         self.subs = rospy.Subscriber("/{}/odom".format(robotname),Odometry,self.callback)
         self.pub = rospy.Publisher("/{}/cmd_vel".format(robotname),Twist, queue_size=10)
         self.rate = rospy.Rate(10)
         self.rate.sleep()
+        # current vel weight
         global w
         w=0.8
+        # local best
         global c1
-        c1=5
+        c1=1
+        # global best
         global c2
-        c2=1
+        c2=2
         global c3
         c3=0
         self.Pbest_point.x=self.robot_pose_x
@@ -77,10 +81,10 @@ class robot():
     def get_next_point(self,Gbest,Pbest,obst):
         self.next_point.x=w*(self.robot_pose_x)+c1*numpy.random.uniform(0,1)*(Pbest.x-self.robot_pose_x)+c2*numpy.random.uniform(0,1)*(Gbest.x-self.robot_pose_x)-c3*numpy.random.uniform(0,1)*(obst.x-self.robot_pose_x)
         self.next_point.y=w*(self.robot_pose_y)+c1*numpy.random.uniform(0,1)*(Pbest.y-self.robot_pose_y)+c2*numpy.random.uniform(0,1)*(Gbest.y-self.robot_pose_y)-c3*numpy.random.uniform(0,1)*(obst.y-self.robot_pose_y)
-        # rospy.loginfo('--------------%s' , self.robotname )
+        rospy.loginfo('--------------%s' , self.robotname )
         # rospy.loginfo(' Pbest X: %s Y:%s' , Gbest.x,Gbest.y )
         # rospy.loginfo('Gbest X: %s Y:%s' , Pbest.x,Pbest.y )
-        # rospy.loginfo('next_point X: %s Y:%s' , self.next_point.x,self.next_point.y )
+        rospy.loginfo('next_point X: %s Y:%s' , self.next_point.x,self.next_point.y )
         return self.next_point
 # initializes Speed randomly in range of (0.05,1)     
 # -------------------------------------------------------------------------  
@@ -107,9 +111,9 @@ class robot():
 
 # -------------------------------------------------------------------------  
 
-    def linear_vel(self,goal_point, constant=0.1):
-        if self.euclidean_distance>4:
-            return 0.5
+    def linear_vel(self,goal_point, constant=0.4):
+        if self.euclidean_distance>3:
+            return 0.8
         else:
             return constant * self.euclidean_distance(goal_point)
 
@@ -142,7 +146,7 @@ class robot():
         return speed.angular.z
 # -------------------------------------------------------------------------  
 # Same as above but uses degrees(preferred)
-    def angular_vel_deg(self, goal_point, constant=0.08):
+    def angular_vel_deg(self, goal_point, constant=0.04):
         yaw_deg=round(self.yaw * (180 / pi), 4);
         angle_diff=self.angle_deg(goal_point) - yaw_deg
         # rospy.loginfo('yaw_deg   %s',yaw_deg)
@@ -164,36 +168,50 @@ class robot():
 
 # -------------------------------------------------------------------------
 # The function that returns the angular velocity of the obstacles potential field
-    def get_apf_vel(self,safety_radius=1.5):
+    def get_apf_vel(self,goal,safety_radius=1.5):
+        # goal_point=Point()
+        goal_point=goal
+
         obst=self.closest_point()
         obst_d=self.euclidean_distance(obst)
         yaw_deg=round(self.yaw * (180 / pi), 4);
         angle_obst=self.angle_deg(obst)-yaw_deg
-        if (obst_d<safety_radius) & (obst_d>0.3):
-            
-           
+        angle_goal=self.angle_deg(goal_point)-yaw_deg
 
-            if abs(angle_obst)>0 :
-                if abs(angle_obst)<180 :
+
+
+        if (obst_d<safety_radius) & (obst_d>0.3):
+            obst_ang_speed=0
+
+            # obst_lin_speed_scaler=1/(safety_radius/(obst_d+0.001))
+                    # angle_goal
+            if  (angle_obst<60.0) & (angle_obst>-60.0):
+                # if abs(angle_goal)>0 :
+                            # angle_goal
+                if angle_goal-angle_obst>0 :
                     obst_ang_speed=-4*(safety_radius/obst_d)
-                    # print(obst_ang_speed)
-                    
+
+                        
                 else:
                     obst_ang_speed=4*(safety_radius/obst_d)
 
-
-            return obst_ang_speed  
-        if (obst_d<0.4) & (obst_d>0.3):
+                   
+            return obst_ang_speed 
+            # ,obst_lin_speed_scaler
+        if (obst_d<0.5) & (obst_d>0.3):
             if abs(angle_obst)>0 :
-                if abs(angle_obst)<180 :
-                    obst_ang_speed=-100*(safety_radius/obst_d)
-                    # print(obst_ang_speed)
+                if angle_goal-angle_obst>0 :
+                    obst_ang_speed=-1000(safety_radius/obst_d)
+                    print(obst_ang_speed)
                     
                 else:
-                    obst_ang_speed=100*(safety_radius/obst_d)
+                    obst_ang_speed=1000(safety_radius/obst_d)
+                    print(obst_ang_speed)
             return obst_ang_speed
+
         else:
             return 0
+            # ,1.0
 
 def get_goal():
     goal_x=0

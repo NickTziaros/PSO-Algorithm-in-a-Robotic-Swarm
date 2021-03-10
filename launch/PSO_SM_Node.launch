@@ -35,7 +35,7 @@
 
 	</group>
 
-	<group ns="$(arg robot_name)_6">
+	<!-- <group ns="$(arg robot_name)_6">
 		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_6 ">
         </node> 
 
@@ -55,9 +55,9 @@
 
 	<group ns="$(arg robot_name)_9">
 		<node pkg="swarm" name="PSO_SM_Node" type="PSO_SM_Node.py" output="screen" args="$(arg robot_name)_9 ">
-        </node> 
+        </node>  -->
 
-	</group>
+	<!-- </group> -->
 
 
 

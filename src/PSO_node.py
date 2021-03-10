@@ -34,7 +34,7 @@ r=robot(robotname)
 speed=Twist()
 goal=Point()
 goal.x=6
-goal.y=6
+goal.y=-6
 # Pbest=10000
 # next_point=Point()
 # # Define PSO Parameters w,c1,r1,c2,r2
@@ -55,12 +55,14 @@ while not rospy.is_shutdown() :
 
 		goal_linear_speed =r.linear_vel(goal)
 		# r.linear_vel(goal)
-		obst_angular_speed=r.get_apf_vel()
-		rospy.loginfo('obst %s' ,obst_angular_speed )
-		rospy.loginfo('goal %s' , goal_angular_speed )
+		obst_angular_speed=r.get_apf_vel(goal)
+		# rospy.loginfo('obst %s' ,obst_angular_speed )
+		# rospy.loginfo('goal %s' , goal_angular_speed )
 		speed.linear.x=goal_linear_speed
 		speed.angular.z=goal_angular_speed+obst_angular_speed
-		print(speed.angular.z)
+		# speed.linear.x=0
+		# speed.angular.z=0
+		# print(speed.angular.z)
 
 
 
