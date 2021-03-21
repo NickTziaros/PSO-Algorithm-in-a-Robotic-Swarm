@@ -67,7 +67,7 @@ def callback(msg1,msg2,msg3,msg4,msg5):
 	# 	Gbest_pose.position.x=msg9.pose.pose.position.x
 	# 	Gbest_pose.position.y=msg9.pose.pose.position.y
 	# 	Gbest_pose.orientation=msg9.pose.pose.orientation
-	# pub.publish(Gbest_pose)
+	pub.publish(Gbest_pose)
 
 
 rospy.init_node('Gbest_publisher')	

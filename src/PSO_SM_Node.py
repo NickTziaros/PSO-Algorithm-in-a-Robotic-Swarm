@@ -67,7 +67,7 @@ class Go2Point(smach.State):
 			next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
 			# self.next_point_obs=next_point
-	 		while r.euclidean_distance(next_point)>0.2:
+	 		while r.euclidean_distance(next_point)>0.3:
 				# steer_vec=r.avoid_obstacle(next_point)
 				# self.next_point_obs.x=steer_vec[0]
 				# self.next_point_obs.y=steer_vec[1]

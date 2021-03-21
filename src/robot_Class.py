@@ -33,13 +33,13 @@ class robot():
         self.rate.sleep()
         # current vel weight
         global w
-        w=0.8
+        w=0.6
         # local best
         global c1
-        c1=1
+        c1=1.5
         # global best
         global c2
-        c2=2
+        c2=0.5
         global c3
         c3=0
         self.Pbest_point.x=self.robot_pose_x
@@ -112,7 +112,7 @@ class robot():
 # -------------------------------------------------------------------------  
 
     def linear_vel(self,goal_point, constant=0.4):
-        if self.euclidean_distance>3:
+        if self.euclidean_distance>5:
             return 0.8
         else:
             return constant * self.euclidean_distance(goal_point)
@@ -168,7 +168,7 @@ class robot():
 
 # -------------------------------------------------------------------------
 # The function that returns the angular velocity of the obstacles potential field
-    def get_apf_vel(self,goal,safety_radius=1.5):
+    def get_apf_vel(self,goal,safety_radius=2.5):
         # goal_point=Point()
         goal_point=goal
 
@@ -189,11 +189,11 @@ class robot():
                 # if abs(angle_goal)>0 :
                             # angle_goal
                 if angle_goal-angle_obst>0 :
-                    obst_ang_speed=-4*(safety_radius/obst_d)
+                    obst_ang_speed=-6*(safety_radius/obst_d)
 
                         
                 else:
-                    obst_ang_speed=4*(safety_radius/obst_d)
+                    obst_ang_speed=6*(safety_radius/obst_d)
 
                    
             return obst_ang_speed 
