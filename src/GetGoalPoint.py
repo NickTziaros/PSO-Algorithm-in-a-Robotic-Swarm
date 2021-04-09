@@ -36,6 +36,6 @@ class GetGoalPoint():
 				min_distance=self.euclidean_distance(p[0],p[1])
 				point.x=self.robot_pose_x-p[0]
 				point.y=self.robot_pose_y-p[1]
-		print " x : %f  y: %f" %(point.x,point.y)
-		print " distance : %f " %(min_distance)	
+		print (" x : %f  y: %f" %(point.x,point.y))
+		print (" distance : %f " %(min_distance))	
 		return point

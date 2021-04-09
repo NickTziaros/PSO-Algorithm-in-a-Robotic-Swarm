@@ -3,9 +3,9 @@
   <xacro:arg name="robot_name" default="robot"/>
 
 <!--  -->
-<xacro:include filename="$(find swarm)/urdf/materials.xacro"/>
-<xacro:include filename="$(find swarm)/urdf/robot_gazebo_plugins.gazebo"/>
-<xacro:include filename="$(find swarm)/urdf/macros.xacro"/>
+	<xacro:include filename="$(find swarm)/urdf/materials.xacro"/>
+	<xacro:include filename="$(find swarm)/urdf/robot_gazebo_plugins.gazebo"/>
+	<xacro:include filename="$(find swarm)/urdf/macros.xacro"/>
 
   
  
@@ -100,7 +100,37 @@
     <child link="$(arg robot_name)/sensor_laser"/>
   </joint> 
 
-  <xacro:link_wheel name="$(arg robot_name)/link_right_wheel" /> 
+<!--   <xacro:link_wheel name="$(arg robot_name)/link_right_wheel" /> 
+ -->
+	<link name="$(arg robot_name)/link_right_wheel">
+		    <inertial>
+		      <mass value="0.2"/>
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <inertia ixx="0.000526666666667" ixy="0" ixz="0" iyy="0.000526666666667" iyz="0" izz="0.001"/>
+		    </inertial>
+		    <collision name="$(arg robot_name)/link_right_wheel_collision">
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <geometry>
+		        <cylinder length="0.04" radius="0.1"/>
+		      </geometry>
+		    </collision>
+		    <visual name="$(arg robot_name)/link_right_wheel_visual">
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <geometry>
+		        <cylinder length="0.04" radius="0.1"/>
+		      </geometry>
+		    </visual>
+		  </link>
+
+
+
+
+
+
+
+
+
+
 
   <joint name="$(arg robot_name)/joint_right_wheel" type="continuous">
     <origin rpy="0 0 0" xyz="-0.05 0.15 0"/>
@@ -112,7 +142,43 @@
   </joint> 
   
   
-  <xacro:link_wheel name="$(arg robot_name)/link_left_wheel" /> 
+<!--  <xacro:link_wheel name="$(arg robot_name)/link_left_wheel" /> 
+ -->	<link name="$(arg robot_name)/link_left_wheel">
+		    <inertial>
+		      <mass value="0.2"/>
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <inertia ixx="0.000526666666667" ixy="0" ixz="0" iyy="0.000526666666667" iyz="0" izz="0.001"/>
+		    </inertial>
+		    <collision name="$(arg robot_name)/link_left_wheel_collision">
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <geometry>
+		        <cylinder length="0.04" radius="0.1"/>
+		      </geometry>
+		    </collision>
+		    <visual name="$(arg robot_name)/link_left_wheel_visual">
+		      <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+		      <geometry>
+		        <cylinder length="0.04" radius="0.1"/>
+		      </geometry>
+		    </visual>
+		  </link>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
   <joint name="$(arg robot_name)/joint_left_wheel" type="continuous">

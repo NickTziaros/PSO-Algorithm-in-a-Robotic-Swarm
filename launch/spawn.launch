@@ -9,7 +9,7 @@
 
     <!--  ******************** Robot Model ********************  -->
    
-     <param name="robot_description" command="$(find xacro)/xacro  '$(find swarm)/urdf/robot_description.urdf.xacro'  robot_name:=$(arg robot_name)   " />  <!-- den pernaei to arg
+     <param name="robot_description" command="$(find xacro)/xacro $(find swarm)/urdf/robot_description.urdf.xacro robot_name:=$(arg robot_name)   " />     <!-- den pernaei to arg
  -->
            
        <!--  <node pkg="swarm" name="get_position" type="get_position.py" output="screen" args="$(arg robot_name) ">
@@ -26,12 +26,12 @@
         <!--  <node pkg="swarm" name="Laser2pc" type="laser2pc.py" output="screen" args="$(arg robot_name) ">
         </node>  -->
 
-        <rosparam file="$(find swarm)/config/controllers.yaml" command="load"/>
+       <!--  <rosparam file="$(find swarm)/config/controllers.yaml" command="load"/> -->
 
-        <node name="controller_spawner" pkg="controller_manager" type="spawner"
+       <!--  <node name="controller_spawner" pkg="controller_manager" type="spawner"
         respawn="false" output="screen" 
         args="joint_state_controller"/>
-
+ -->
 
 
 
@@ -45,7 +45,7 @@
  -->        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
             respawn="false" output="screen">
            
-        </node> 
+            </node> 
 
      
    

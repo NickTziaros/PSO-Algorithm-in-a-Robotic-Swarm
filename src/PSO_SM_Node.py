@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import	rospy
 import 	sys
 from 	geometry_msgs.msg import Twist,Point,Pose
@@ -64,33 +64,34 @@ class Go2Point(smach.State):
 
 
 	def execute(self, userdata):
-			next_point=userdata.next_point_in
+		next_point=userdata.next_point_in
 			# rospy.loginfo('X: %s Y:%s' , next_point.x,next_point.y )
 			# self.next_point_obs=next_point
-	 		while r.euclidean_distance(next_point)>0.3:
-				# steer_vec=r.avoid_obstacle(next_point)
+		while r.euclidean_distance(next_point)>0.3:
+				# steer_vec=r.avoid_obstacle(next_point)				
 				# self.next_point_obs.x=steer_vec[0]
 				# self.next_point_obs.y=steer_vec[1]
-				goal_angular_speed=r.angular_vel_deg(next_point)
+			goal_angular_speed=r.angular_vel_deg(next_point)
 				# obst_angular_speed,apf_linear_scaler=r.get_apf_vel()
 
-				goal_linear_speed = r.linear_vel(next_point)
-				obst_angular_speed=r.get_apf_vel(next_point)
-				speed.linear.x=goal_linear_speed
+			goal_linear_speed = r.linear_vel(next_point)
+			obst_angular_speed=r.get_apf_vel(next_point)
+			speed.linear.x=goal_linear_speed
 				# speed.linear.x=goal_linear_speed*apf_linear_scaler
 				
-				speed.angular.z=goal_angular_speed+obst_angular_speed
+			speed.angular.z=goal_angular_speed+obst_angular_speed
 				# rospy.loginfo('X obst %s Y obst %s' ,self.next_point_obs.x,self.next_point_obs.y )
-				pub.publish(speed)
+			pub.publish(speed)
 				# next_point=userdata.next_point_in
 				# steer_vec=r.avoid_obstacle(next_point)
 				# self.next_point_obs.x=steer_vec[0]
 				# self.next_point_obs.y=steer_vec[1]
 				
-				if r.euclidean_distance(goal)<2:
-					return 'finished2'
-					print("lol")
-			return 'finished'
+			if r.euclidean_distance(goal)<2:
+				return 'finished2'
+				print("lol")
+					
+		return 'finished'
 			
 			
 			
@@ -119,6 +120,7 @@ if __name__ == '__main__':
 	global goal
 	global pub
 	global speed
+	
 	l=Laser_ClosestPoint(robotname)
 	r=robot(robotname)
 
@@ -162,4 +164,4 @@ if __name__ == '__main__':
 	# Start State_Machine
 	outcome =sm.execute()
 	sis.stop()
-	rospy.spin()
+rospy.spin()

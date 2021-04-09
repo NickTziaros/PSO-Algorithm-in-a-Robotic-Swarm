@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import  rospy
 from    geometry_msgs.msg import Twist,Point,Pose
 from    nav_msgs.msg import Odometry
@@ -111,11 +111,11 @@ class robot():
 
 # -------------------------------------------------------------------------  
 
-    def linear_vel(self,goal_point, constant=0.4):
-        if self.euclidean_distance>5:
+    def linear_vel(self,goal_point, constant=0.2):
+        if self.euclidean_distance(goal_point)>5:
             return 0.8
         else:
-            return constant * self.euclidean_distance(goal_point)
+            return 0.4
 
 
 # -------------------------------------------------------------------------  
@@ -201,11 +201,11 @@ class robot():
         if (obst_d<0.5) & (obst_d>0.3):
             if abs(angle_obst)>0 :
                 if angle_goal-angle_obst>0 :
-                    obst_ang_speed=-1000(safety_radius/obst_d)
+                    obst_ang_speed=-1000*(safety_radius/obst_d)
                     print(obst_ang_speed)
                     
                 else:
-                    obst_ang_speed=1000(safety_radius/obst_d)
+                    obst_ang_speed=1000*(safety_radius/obst_d)
                     print(obst_ang_speed)
             return obst_ang_speed
 
