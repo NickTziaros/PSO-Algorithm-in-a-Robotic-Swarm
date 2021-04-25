@@ -11,8 +11,7 @@
     <arg name="robot_name" default="robot"/>
     <arg name="box_name" default="box"/>
     <param name="/use_sim_time" value="true"/>
-     <param name="robot_description"
-    command="$(find xacro)/xacro.py $(find swarm)/urdf/robot_description.urdf.xacro" />
+    <param name="robot_description" command="$(find xacro)/xacro $(find swarm)/urdf/robot_description.urdf.xacro" />
 <!-- $(find swarm)/gazebo_worlds/launch_obstacles_with_target.launch -->
         <!--  ******************** Gazebo ********************  -->
         <!-- empty_world.launch  $(find gazebo_ros)/launch/empty_world.launch-->

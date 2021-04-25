@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import  rospy
 from  math import cos,sin
 from sensor_msgs.msg import LaserScan
@@ -17,11 +17,11 @@ class Laser_ClosestPoint():
 		# rate.sleep()
 		self.robotname=robotname	
 		self.subs = rospy.Subscriber("/{}/laser_scan".format(robotname),LaserScan,self.Laser_callback)
-		self.closest_point_pub = rospy.Publisher("/{}/closest_point".format(robotname),PointStamped, queue_size=10)
+		self.closest_point_pub = rospy.Publisher("/{}/closest_point".format(robotname),PointStamped, queue_size=20)
 		# subscribres to TF and listens at the transforms tha are published
 		self.listener=tf.TransformListener()
 		# we wait for the tranformations between sensor_laser and odom
-		self.listener.waitForTransform("/{}/sensor_laser".format(self.robotname), "/{}/odom".format(self.robotname), rospy.Time(0),rospy.Duration(5.0))
+		self.listener.waitForTransform("/{}/sensor_laser".format(self.robotname), "/{}/odom".format(self.robotname), rospy.Time(0),rospy.Duration(5))
 
 
 
@@ -65,7 +65,7 @@ class Laser_ClosestPoint():
 			# we transform the point to odom frame
 			p=self.listener.transformPoint("/{}/odom".format(self.robotname),point_transformed )
 		except (tf.LookupException, tf.ConnectivityException,tf.ExtrapolationException):
-			print "ERROR"
+			print ("ERROR")
 
 
 		# we publish the transformed point
