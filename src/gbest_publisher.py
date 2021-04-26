@@ -26,10 +26,12 @@ def callback(msg1,msg2,msg3,msg4,msg5):
 	# distance_buffer.insert(8,euclidean_distance(goal.x,goal.y,msg9.pose.pose.position.x,msg9.pose.pose.position.y))
 	Gbest=10000
 	robot=0
-	for i in range(0,4):
+	for i in range(0,5):
 		if distance_buffer[i]<Gbest:
+
 			Gbest=distance_buffer[i]
 			robot=i
+	
 	# rospy.loginfo('distance: %s %s' ,Gbest,robot)
 	if robot==0: 
 		Gbest_pose.position.x=msg1.pose.pose.position.x
@@ -78,7 +80,7 @@ Gbest_pose=Pose()
 global goal
 goal=Point()
 goal.x,goal.y=get_goal()
-
+print(goal)
 sub_1=message_filters.Subscriber('/robot_1/odom',Odometry)
 sub_2=message_filters.Subscriber('/robot_2/odom',Odometry)
 sub_3=message_filters.Subscriber('/robot_3/odom',Odometry)
