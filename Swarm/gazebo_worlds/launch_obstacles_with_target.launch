@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<launch>
-  <!-- Launch file for the custom world with the target -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find swarm)/gazebo_worlds/obst_with_target.world"/>
-  </include>
-</launch>
