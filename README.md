@@ -9,7 +9,10 @@
 ### In the Gazebo simulation the robots use the said algorithm to navigate to the center of the arena  while avoiding the obstacles .
 
 
-https://user-images.githubusercontent.com/33639811/127756568-333e6644-f3c2-4e44-9ef2-cc1e6fce990b.mp4
+
+
+https://user-images.githubusercontent.com/33639811/127756592-3252a666-b5c5-4cc6-b3d9-4f7d7e9b0e96.mp4
+
 
 
 
