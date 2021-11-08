@@ -1,6 +1,6 @@
-### Go2goal PSO(Particle Swarm Optimization) based algorithm used in a swarm of differential drive robots.
+### A PSO(Particle Swarm Optimization) implemantation on a swarm of differential drive robots.
 
-### In the Gazebo simulation the robots use the said algorithm to navigate to the center of the arena  while avoiding the obstacles .
+### The robots use the said algorithm to navigate to the center of the arena  while avoiding obstacles .
 
 
 
